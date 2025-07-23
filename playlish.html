@@ -3,127 +3,181 @@
 <head>
   <meta charset="UTF-8">
   <title>Playlist Toggle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
 
-body {
-  margin: 0;
-  font-family: 'Prompt', sans-serif;
-  background-color: #121212;
-  color: #fff;
-  padding: 30px;
-}
+    body {
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      padding: 30px;
+    }
 
-h1 {
-  text-align: center;
-  color: #fff;
-  margin-bottom: 40px;
-  font-size: 2.2em;
-  text-shadow: 0 2px 5px rgba(0,0,0,0.6);
-}
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 40px;
+      font-size: 2.2em;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+    }
 
-.playlist {
-  max-width: 700px;
-  margin: auto;
-}
+    .playlist {
+      max-width: 700px;
+      margin: auto;
+    }
 
-.song {
-  display: flex;
-  align-items: center;
-  padding: 14px 18px;
-  background-color: #1e1e1e;
-  border-radius: 15px;
-  margin-bottom: 16px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
+    .song {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      background-color: #1e1e1e;
+      border-radius: 15px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
 
-.song:hover {
-  background-color: #262626;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-}
+    .song:hover {
+      background-color: #262626;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    }
 
-.song.playing {
-  background-color: #1db95430;
-  box-shadow: 0 0 15px #1db95480;
-}
+    .song.playing {
+      background-color: #1db95430;
+      box-shadow: 0 0 15px #1db95480;
+    }
 
-.cover {
-  width: 64px;
-  height: 64px;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-  margin-right: 16px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
-}
+    .cover {
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      margin-right: 16px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    }
 
-.cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    .cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-.info {
-  flex-grow: 1;
-}
+    .info {
+      flex-grow: 1;
+    }
 
-.title {
-  font-size: 1.1em;
-  font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 4px;
-}
+    .title {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
 
-.artist {
-  font-size: 0.9em;
-  color: #b3b3b3;
-}
+    .artist {
+      font-size: 0.9em;
+      color: #b3b3b3;
+    }
 
-.playing-indicator {
-  position: absolute;
-  right: 20px;
-  width: 12px;
-  height: 12px;
-  background: #1db954;
-  border-radius: 50%;
-  display: none;
-  box-shadow: 0 0 10px #1db954;
-}
+    .playing-indicator {
+      position: absolute;
+      right: 20px;
+      width: 12px;
+      height: 12px;
+      background: #1db954;
+      border-radius: 50%;
+      display: none;
+      box-shadow: 0 0 10px #1db954;
+    }
 
-.song.playing .playing-indicator {
-  display: block;
-}
+    .song.playing .playing-indicator {
+      display: block;
+    }
 
-audio {
-  display: none;
-}
+    audio {
+      display: none;
+    }
 
-.back-button {
-  display: inline-block;
-  margin-bottom: 25px;
-  padding: 10px 20px;
-  background-color: #1e1e1e;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 30px;
-  font-size: 1em;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
+    .back-button {
+      display: inline-block;
+      margin-bottom: 25px;
+      padding: 10px 20px;
+      background-color: #1e1e1e;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 30px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
 
-.back-button:hover {
-  background-color: #1db954;
-  color: #000;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-}
+    .back-button:hover {
+      background-color: #1db954;
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    /* Responsive for mobile */
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .song {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+      }
+
+      .cover {
+        width: 100%;
+        height: auto;
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+
+      .cover img {
+        width: 100%;
+        height: auto;
+      }
+
+      .info {
+        width: 100%;
+      }
+
+      .title {
+        font-size: 1em;
+      }
+
+      .artist {
+        font-size: 0.85em;
+      }
+
+      .playing-indicator {
+        right: 10px;
+        top: 10px;
+      }
+
+      .back-button {
+        width: 100%;
+        text-align: center;
+        font-size: 0.95em;
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -131,11 +185,11 @@ audio {
   <a href="page3.html" class="back-button">← ย้อนกลับ</a>
 
   <h1>🌱 ៸៸𓂃 𝖯𝗅𝖺𝗒𝗅𝗂𝗌𝗍 💭 彡·˚</h1>
-  
+
   <div class="playlist">
     <div class="song" onclick="togglePlay(this)">
       <div class="cover">
-        <img src="cover1.JPG " alt="Cover 1">
+        <img src="cover1.jpg" alt="Cover 1">
       </div>
       <div class="info">
         <div class="title">กอด</div>
@@ -186,7 +240,7 @@ audio {
         <img src="cover4.jpg" alt="Cover 5">
       </div>
       <div class="info">
-        <div class="title">ไม่อยากให้เธอไม่สบาย (You) </div>
+        <div class="title">ไม่อยากให้เธอไม่สบาย (You)</div>
         <div class="artist">Three Man Down</div>
       </div>
       <div class="playing-indicator"></div>
@@ -228,7 +282,7 @@ audio {
       <div class="playing-indicator"></div>
       <audio src="BENT - รักแฟน.mp3"></audio>
     </div>
-    </div>
+  </div>
 
   <script>
     let currentAudio = null;
@@ -237,7 +291,6 @@ audio {
     function togglePlay(songElement) {
       const audio = songElement.querySelector("audio");
 
-      // ถ้าเพลงเดียวกันถูกกดอีกครั้ง → toggle pause/play
       if (currentAudio === audio) {
         if (audio.paused) {
           audio.play();
@@ -249,21 +302,17 @@ audio {
         return;
       }
 
-      // ถ้ามีเพลงก่อนหน้า → หยุดก่อน
       if (currentAudio) {
         currentAudio.pause();
         if (currentSong) currentSong.classList.remove("playing");
       }
 
-      // เล่นเพลงใหม่
       audio.play();
       songElement.classList.add("playing");
 
-      // บันทึกสถานะ
       currentAudio = audio;
       currentSong = songElement;
 
-      // เมื่อเพลงจบ → เอา class playing ออก
       audio.onended = () => {
         songElement.classList.remove("playing");
         currentAudio = null;
