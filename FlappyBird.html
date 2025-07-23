@@ -7,16 +7,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet" />
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+      margin: 0; padding: 0; height: 100%;
       background: url('4ebe244be4a293f5fb3d07eaae80b437.jpg') no-repeat center center fixed;
       background-size: cover;
+      font-family: 'Itim', cursive;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Itim', cursive;
-      overflow: hidden;
+      position: relative;
     }
 
     canvas {
@@ -30,6 +29,7 @@
       max-height: 600px;
       display: none;
       animation: popIn 0.6s ease;
+      z-index: 2;
     }
 
     #startButton {
@@ -45,11 +45,14 @@
       box-shadow: 0 6px 14px rgba(255, 138, 203, 0.5);
       transition: transform 0.2s, background-color 0.3s;
       font-family: 'Itim', cursive;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     #startButton:hover {
       background-color: #ff5eb8;
-      transform: scale(1.05);
+      transform: translate(-50%, -50%) scale(1.05);
     }
 
     #popupOverlay {
@@ -57,9 +60,11 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.5);
-      z-index: 100;
+      z-index: 10;
       justify-content: center;
       align-items: center;
+      user-select: none;
+      font-family: 'Itim', cursive;
     }
 
     #popupBox {
@@ -74,6 +79,7 @@
       box-shadow: 0 0 25px #ffc3e6;
       max-width: 300px;
       animation: popIn 0.4s ease;
+      user-select: none;
     }
 
     #popupBox button {
@@ -102,9 +108,10 @@
       color: white;
       font-weight: bold;
       text-shadow: 2px 2px 4px #000;
-      z-index: 10;
+      z-index: 3;
       display: none;
       font-family: 'Itim', cursive;
+      user-select: none;
     }
 
     @keyframes popIn {
@@ -119,7 +126,7 @@
   <button id="startButton">เริ่มเกม</button>
 
   <!-- เพลงแบ็คกราวด์ -->
-  <audio id="bgMusic" src="https://media.vocaroo.com/mp3/1mDg7B7XQf5Y" preload="auto"></audio>
+  <audio id="bgMusic" src="https://media.vocaroo.com/mp3/1mDg7B7XQf5Y" preload="auto" loop></audio>
 
   <!-- Popup เมื่อชน -->
   <div id="popupOverlay">
@@ -187,6 +194,7 @@
     }
 
     function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(bgInside, 0, 0, canvas.width, canvas.height);
       drawBird();
       drawPipes();
@@ -224,19 +232,25 @@
     function endGame() {
       gameOver = true;
       popupOverlay.style.display = 'flex';
+      bgMusic.pause();
+      startButton.style.display = 'block';
     }
 
-function resetGame() {
-  bird.y = 150;
-  bird.velocity = 0;
-  pipes = [];
-  frameCount = 0;
-  score = 0;
-  gameOver = false;
-  popupOverlay.style.display = 'none';
-  scoreDisplay.textContent = 'คะแนน: 0';
-  loop(); // เริ่มเกมใหม่ โดยไม่แตะ bgMusic
-}
+    function resetGame() {
+      bird.y = 150;
+      bird.velocity = 0;
+      pipes = [];
+      frameCount = 0;
+      score = 0;
+      gameOver = false;
+      popupOverlay.style.display = 'none';
+      scoreDisplay.textContent = 'คะแนน: 0';
+      startButton.style.display = 'none';
+      started = true;
+      bgMusic.currentTime = 0;
+      bgMusic.play();
+      loop();
+    }
 
     function loop() {
       if (!gameOver && started) {
@@ -247,18 +261,16 @@ function resetGame() {
     }
 
     startButton.addEventListener('click', () => {
-  startButton.style.display = 'none';
-  canvas.style.display = 'block';
-  scoreDisplay.style.display = 'block';
-  started = true;
+      startButton.style.display = 'none';
+      canvas.style.display = 'block';
+      scoreDisplay.style.display = 'block';
+      started = true;
 
-  // ✅ เล่นเพลงแค่ครั้งเดียว
-  bgMusic.volume = 0.6;
-  bgMusic.play();
+      bgMusic.volume = 0.6;
+      bgMusic.play();
 
-  loop();
-});
-
+      loop();
+    });
 
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space' && !gameOver) bird.velocity = jumpForce;
