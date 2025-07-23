@@ -55,6 +55,10 @@
       cursor: pointer;
       overflow: hidden;
       user-select: none;
+      transition: transform 0.3s ease;
+    }
+    .card:hover:not(.flipped):not(.matched) {
+      transform: scale(1.05);
     }
     .card img {
       position: absolute;
@@ -85,6 +89,7 @@
     }
     .card.matched {
       pointer-events: none;
+      box-shadow: 0 0 15px deeppink;
     }
     .popup {
       display: none;
@@ -105,6 +110,8 @@
       text-align: center;
       max-width: 90vw;
       box-sizing: border-box;
+      user-select: none;
+      box-shadow: 0 4px 20px deeppink;
     }
     .start-btn {
       margin-top: 20px;
@@ -116,6 +123,10 @@
       font-size: 16px;
       cursor: pointer;
       user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .start-btn:hover {
+      background-color: #ff4da6;
     }
 
     #startScreen {
@@ -125,8 +136,26 @@
       height: 100vh;
       width: 100%;
       box-sizing: border-box;
+      user-select: none;
     }
 
+    /* Responsive */
+    @media (max-width: 768px) {
+      .game-container {
+        width: 95vw;
+        height: auto;
+      }
+      .grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+    }
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -136,7 +165,7 @@
     Your browser does not support the audio element.
   </audio>
 
-  <h1></h1>
+  <h1>เกมจับคู่ภาพ</h1>
 
   <div id="startScreen">
     <button id="startButton" class="start-btn" onclick="startGame()">เริ่มเกม</button>
@@ -165,7 +194,10 @@
     let matchedCount = 0;
 
     function startGame() {
-      document.getElementById("bgMusic").play();
+      const bgMusic = document.getElementById("bgMusic");
+      bgMusic.play().catch(() => {
+        // ถ้า browser block autoplay ให้ผู้เล่นกดปุ่มอีกครั้ง
+      });
       document.getElementById("startScreen").style.display = "none";
       document.getElementById("popup").style.display = "none";
       document.getElementById("gameContainer").style.display = "flex";
@@ -186,6 +218,7 @@
 
         const img = document.createElement("img");
         img.src = src;
+        img.alt = "ภาพการ์ดจับคู่";
 
         card.appendChild(img);
         gameGrid.appendChild(card);
@@ -207,7 +240,7 @@
               matchedCount++;
 
               if (matchedCount === images.length) {
-                setTimeout(() => document.getElementById("popup").style.display = "flex", 500);
+                setTimeout(() => document.getElementById("popup").style.display = "flex", 600);
               }
 
               resetBoard();
@@ -216,7 +249,7 @@
                 firstCard.classList.remove("flipped");
                 secondCard.classList.remove("flipped");
                 resetBoard();
-              }, 800);
+              }, 900);
             }
           }
         });
@@ -230,6 +263,7 @@
 
     window.onload = () => {
       document.getElementById("gameContainer").style.display = "none";
+      document.getElementById("popup").style.display = "none";
     };
   </script>
 </body>
