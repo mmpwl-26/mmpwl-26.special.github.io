@@ -1,40 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Love Timer</title>
-  <!-- โหลดฟ้อนต์ Prompt จาก Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: 'Prompt', sans-serif; /* เปลี่ยนฟ้อนต์ตรงนี้ */
+      font-family: 'Prompt', sans-serif;
       background-color: #fff0f5;
       background-image: url('158360f0b0f1b5d5020cb309be140b10.jpg');
       background-size: cover;
       background-position: center;
       color: #E78F81;
-      overflow: hidden;
-
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh; /* เต็มหน้าจอ */
-      text-align: center;
+      padding: 20px;
+      overflow: hidden;
     }
 
-    /* ... รหัส CSS อื่นๆ เหมือนเดิม ... */
-
     .container {
-      position: relative;
-      z-index: 1;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 30px 20px;
+      border-radius: 25px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      max-width: 500px;
+      width: 100%;
     }
 
     .profile {
       display: flex;
-      justify-content: center;
       align-items: center;
-      margin-bottom: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .profile img {
@@ -49,9 +56,8 @@
       border: 2px dashed #f8cdda;
       background-color: #fff;
       border-radius: 25px;
-      padding: 10px 25px;
-      display: inline-block;
-      font-size: 18px;
+      padding: 8px 18px;
+      font-size: 16px;
       color: #ff69b4;
     }
 
@@ -59,38 +65,36 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-wrap: wrap;
       background-color: white;
       border: 3px solid #fbc4d9;
       border-radius: 25px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      margin: 40px auto 10px;
-      font-weight: bold;
-      flex-wrap: wrap;
+      padding: 20px 10px;
+      margin: 20px 0;
       gap: 15px;
-      width: fit-content;
+      width: 100%;
     }
 
     .time-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-
-    .time-label {
-      margin-top: 5px;
-      font-size: 16px;
-      color: #d6336c;
-      font-weight: normal;
+      flex: 1 1 100px;
     }
 
     .time-part {
       background-color: #FFDCDC;
       color: #F16767;
       border-radius: 10px;
-      padding: 15px 20px;
-      font-size: 24px;
-      min-width: 120px;
+      padding: 12px;
+      font-size: 22px;
+      width: 100%;
+    }
+
+    .time-label {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #d6336c;
     }
 
     .names {
@@ -100,36 +104,35 @@
       border-radius: 20px;
       font-weight: bold;
       color: white;
-      font-size: 20px;
-      margin-top: 30px;
+      font-size: 18px;
+      margin-top: 15px;
       cursor: pointer;
       user-select: none;
     }
 
     .footer {
-      margin-top: 20px;
-      font-size: 24px;
+      margin-top: 15px;
+      font-size: 20px;
       color: #f471a9;
     }
 
     .back-button {
       display: inline-block;
-      margin-top: 30px;
-      padding: 12px 28px;
+      margin-top: 20px;
+      padding: 10px 24px;
       background: linear-gradient(135deg, #ffe0f0, #ffc0cb);
       color: #d6336c;
       text-decoration: none;
       border-radius: 30px;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       box-shadow: 0 6px 18px rgba(255, 105, 180, 0.3);
       transition: all 0.3s ease;
-      position: relative;
     }
 
     .back-button::before {
       content: "← ";
-      font-size: 18px;
+      font-size: 16px;
       margin-right: 5px;
     }
 
@@ -137,7 +140,6 @@
       background: #ff94c2;
       color: white;
       transform: translateY(-2px);
-      box-shadow: 0 8px 22px rgba(255, 20, 147, 0.4);
     }
 
     /* Popup styles */
@@ -153,9 +155,9 @@
 
     .popup-content {
       background: #ffb8d0;
-      padding: 25px 40px;
+      padding: 25px 30px;
       border-radius: 20px;
-      max-width: 300px;
+      max-width: 90%;
       color: white;
       font-weight: bold;
       text-align: center;
@@ -169,19 +171,47 @@
     }
 
     .popup-content p {
-      font-size: 18px;
-      line-height: 1.4;
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 10px 0;
     }
 
     .close-btn {
       position: absolute;
-      top: 8px; right: 12px;
+      top: 10px;
+      right: 15px;
       background: transparent;
       border: none;
       font-size: 26px;
       font-weight: bold;
       color: white;
       cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .time-part {
+        font-size: 18px;
+        padding: 10px;
+      }
+
+      .search-box {
+        font-size: 14px;
+        padding: 6px 14px;
+      }
+
+      .names {
+        font-size: 16px;
+        padding: 8px 20px;
+      }
+
+      .footer {
+        font-size: 18px;
+      }
+
+      .back-button {
+        font-size: 14px;
+        padding: 8px 18px;
+      }
     }
   </style>
 </head>
@@ -212,24 +242,17 @@
     </div>
 
     <div class="names">M o o k ♡ M i k e</div>
-
     <div class="footer">𐔌՞. .՞𐦯</div>
-
     <a class="back-button" href="page3.html">ย้อนกลับ</a>
   </div>
 
-  <!-- Popup จดหมายความในใจ -->
+  <!-- Popup -->
   <div id="lovePopup" class="popup">
     <div class="popup-content">
       <button class="close-btn" onclick="closePopup()">×</button>
       <h2>ถึง คุณแฟนที่น่ารัก</h2>
-      <p>เราอยู่ด้วยกันมากี่วันแล้วเนี่ย ตลอดเวลาที่อยู่ด้วยกันมันดูมีอุปสรรคเยอะมากๆเลยเนาะ
-        เหนื่อยมั้ยแฟน ท้อบ้างมั้ย จะให้พูดยังไงดีเค้ารู้ว่าพี่เหนื่อยมากๆแล้ว เหนื่อยกับเค้าเอง
-        เค้าก็ไม่อยากเป็นต้นเหตุให้พี่เหนื่อยหรอกนะ ขอโทษจริงๆ </p>
-        
-      <p>แต่ยังไงเค้าคนนี้จะซื่อสัตย์กับพี่เสมอต้นเสมอปลาย พี่ไม่ต้องห่วงเลยนะ
-        ไม่ต้องกลัวว่าความรักที่พี่ให้มา เค้าจะไม่รักษาไว้ อยุ่ให้เค้ารักพี่นานๆนะ 
-        เค้าอยากรักพี่ไปนานๆเลย</p>
+      <p>เราอยู่ด้วยกันมากี่วันแล้วเนี่ย ตลอดเวลาที่อยู่ด้วยกันมันดูมีอุปสรรคเยอะมากๆเลยเนาะ เหนื่อยมั้ยแฟน ท้อบ้างมั้ย เค้ารู้ว่าพี่เหนื่อยมากๆแล้ว เหนื่อยกับเค้าเอง เค้าก็ไม่อยากเป็นต้นเหตุให้พี่เหนื่อยหรอกนะ ขอโทษจริงๆ </p>
+      <p>แต่ยังไงเค้าคนนี้จะซื่อสัตย์กับพี่เสมอต้นเสมอปลาย พี่ไม่ต้องห่วงเลยนะ ไม่ต้องกลัวว่าความรักที่พี่ให้มา เค้าจะไม่รักษาไว้ อยู่ให้เค้ารักพี่นานๆนะ เค้าอยากรักพี่ไปนานๆเลย</p>
     </div>
   </div>
 
@@ -254,7 +277,7 @@
     setInterval(updateTimer, 1000);
     updateTimer();
 
-    // Popup logic
+    // Popup
     const namesDiv = document.querySelector('.names');
     const popup = document.getElementById('lovePopup');
 
@@ -266,11 +289,8 @@
       popup.style.display = 'none';
     }
 
-    // ปิด popup เมื่อคลิกที่พื้นที่รอบๆ popup-content
     popup.addEventListener('click', (e) => {
-      if (e.target === popup) {
-        closePopup();
-      }
+      if (e.target === popup) closePopup();
     });
   </script>
 </body>
