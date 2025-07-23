@@ -2,102 +2,333 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>เกมที่ 2</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>เกมจิ๊กซอว์ - เล่นได้จริง ลากวาง</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       font-family: 'Prompt', sans-serif;
       background: linear-gradient(135deg, #FFF9BD, #DEE791);
-      margin: 0;
-      padding: 30px 20px;
+      margin: 0; padding: 20px;
+      display: flex; flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+      text-align: center;
+    }
+    h2 {
+      font-size: 2rem; margin-bottom: 20px;
+      color: #077A7D;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    }
+    #startScreen {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #f8bbd0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      flex-direction: column;
+      gap: 20px;
+    }
+    #startBtn {
+      font-size: 24px;
+      padding: 12px 30px;
+      background: #ec407a;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 4px 12px rgba(236, 64, 122, 0.6);
+      transition: background-color 0.3s ease;
+    }
+    #startBtn:hover { background: #d6336c; }
+    #gameWrapper {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background: #fce4ec;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      max-width: 380px;
+      width: 100%;
+    }
+    #thumbnails {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 15px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .thumbnail {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 3px solid transparent;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+    }
+    .thumbnail.selected {
+      border-color: #ec407a;
+    }
+    #gameContainer {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
+      gap: 15px;
+    }
+    #pieceContainer, #puzzleBoard {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      grid-template-rows: repeat(4, 80px);
+      gap: 5px;
+    }
+    .piece, .dropzone {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      user-select: none;
+    }
+    .piece {
+      background-size: 320px 320px;
+      border: 2px solid #fff;
+      cursor: pointer;
+      transition: outline 0.2s;
+    }
+    .dropzone {
+      background: #fce4ec;
+      border: 2px dashed #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-direction: column;
+      z-index: 99;
       text-align: center;
-      color: #333;
+      user-select: none;
+      padding: 20px;
     }
-
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 20px;
-      color: #077A7D;
-      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    #popup button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #ec407a;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(236, 64, 122, 0.6);
+      transition: background-color 0.3s ease;
     }
-
-    iframe {
-      width: 100%;
-      max-width: 1000px;
-      height: calc(100vh - 230px);
-      border: 3px solid #077A7D;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    #popup button:hover {
+      background: #d6336c;
     }
-
-    .back-link {
-      display: inline-block;
-      margin-top: 30px;
-      padding: 12px 28px;
-      background-color: #077A7D;
-      border-radius: 30px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: bold;
-      font-size: 16px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .back-link::before {
-      content: "← ";
-      margin-right: 4px;
-    }
-
-    .back-link:hover {
-      background-color: #7AE2CF;
-      color: #000;
-      transform: scale(1.05);
-    }
-
-    @media (max-width: 600px) {
-      h2 {
-        font-size: 1.5rem;
+    @media (max-width: 440px) {
+      #gameWrapper {
+        max-width: 100%;
+        padding: 10px;
       }
-
-      iframe {
-        height: 60vh;
+      #pieceContainer, #puzzleBoard {
+        grid-template-columns: repeat(4, 60px);
+        grid-template-rows: repeat(4, 60px);
       }
-
-      .back-link {
-        padding: 10px 20px;
-        font-size: 0.95rem;
-      }
-    }
-
-    @media (max-width: 400px) {
-      body {
-        padding: 20px 12px;
-      }
-
-      iframe {
-        height: 55vh;
-      }
-
-      .back-link {
-        padding: 8px 16px;
-        font-size: 0.9rem;
+      .piece, .dropzone {
+        width: 60px;
+        height: 60px;
       }
     }
   </style>
 </head>
 <body>
   <h2>เกมที่ 2: Jigsaw Puzzle</h2>
-  <iframe src="jigsawpuzle.html" allowfullscreen></iframe>
-  <a href="game-menu.html" class="back-link">ย้อนกลับ</a>
+
+  <div id="startScreen">
+    <button id="startBtn">เริ่มเกม</button>
+  </div>
+
+  <div id="gameWrapper">
+    <div id="thumbnails">
+      <img src="jigsaw1.jpg" class="thumbnail" onclick="startGame(this, 'jigsaw1.jpg')" />
+      <img src="jigsaw2.jpg" class="thumbnail" onclick="startGame(this, 'jigsaw2.jpg')" />
+      <img src="jigsaw3.jpg" class="thumbnail" onclick="startGame(this, 'jigsaw3.jpg')" />
+    </div>
+
+    <div id="gameContainer">
+      <div id="pieceContainer"></div>
+      <div id="puzzleBoard"></div>
+    </div>
+  </div>
+
+  <div id="popup">
+    เกมส์นี้ก็ชนะอีกแล้ว<br>ชนะทุกอย่างเลย เก่งมาก
+    <button onclick="resetGame()">เล่นอีกครั้ง</button>
+  </div>
+
+  <audio id="bgm" loop></audio>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const startScreen = document.getElementById('startScreen');
+    const gameWrapper = document.getElementById('gameWrapper');
+    const bgm = document.getElementById('bgm');
+
+    const rows = 4;
+    const cols = 4;
+    const totalPieces = rows * cols;
+    const pieceWidth = 80;
+    const pieceHeight = 80;
+    const puzzleBoard = document.getElementById('puzzleBoard');
+    const pieceContainer = document.getElementById('pieceContainer');
+    const popup = document.getElementById('popup');
+
+    let dragged = null;
+    let tappedPiece = null;
+    let correct = 0;
+    let completedPuzzles = {};
+    let currentImage = null;
+    const imageList = ['jigsaw1.jpg', 'jigsaw2.jpg', 'jigsaw3.jpg'];
+
+    startBtn.addEventListener('click', () => {
+      startScreen.style.display = 'none';
+      gameWrapper.style.display = 'flex';
+      bgm.src = "https://media.vocaroo.com/mp3/1bFaEBX6V9fH";
+      bgm.play();
+    });
+
+    function startGame(el, imagePath) {
+      document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('selected'));
+      el.classList.add('selected');
+      currentImage = imagePath;
+      puzzleBoard.innerHTML = '';
+      pieceContainer.innerHTML = '';
+      correct = 0;
+      tappedPiece = null;
+
+      for (let i = 0; i < totalPieces; i++) {
+        const dropzone = document.createElement('div');
+        dropzone.classList.add('dropzone');
+        dropzone.dataset.index = i;
+
+        dropzone.addEventListener('dragover', e => e.preventDefault());
+        dropzone.addEventListener('drop', drop);
+        dropzone.addEventListener('click', () => {
+          if (!tappedPiece || dropzone.hasChildNodes()) return;
+          const correctIndex = tappedPiece.dataset.index;
+          const dropIndex = dropzone.dataset.index;
+          if (correctIndex !== dropIndex) return;
+          dropzone.appendChild(tappedPiece);
+          tappedPiece.style.outline = '';
+          tappedPiece.draggable = false;
+          tappedPiece.style.cursor = 'default';
+          tappedPiece.style.boxShadow = '0 0 10px 3px #4caf50';
+          if (!completedPuzzles[currentImage]) completedPuzzles[currentImage] = Array(totalPieces).fill(false);
+          completedPuzzles[currentImage][correctIndex] = true;
+          tappedPiece = null;
+          correct++;
+          if (allPuzzlesCompleted()) setTimeout(() => popup.style.display = 'flex', 300);
+        });
+
+        puzzleBoard.appendChild(dropzone);
+      }
+
+      let completed = completedPuzzles[imagePath] || Array(totalPieces).fill(false);
+      correct = completed.filter(x => x).length;
+
+      completed.forEach((done, index) => {
+        if (done) {
+          const piece = createPiece(imagePath, index);
+          piece.draggable = false;
+          piece.style.cursor = 'default';
+          piece.style.boxShadow = '0 0 10px 3px #4caf50';
+          puzzleBoard.children[index].appendChild(piece);
+        }
+      });
+
+      const remaining = [];
+      for (let i = 0; i < totalPieces; i++) {
+        if (!completed[i]) remaining.push(i);
+      }
+      remaining.sort(() => Math.random() - 0.5);
+
+      remaining.forEach(i => {
+        const piece = createPiece(imagePath, i);
+        piece.draggable = true;
+        piece.dataset.index = i;
+
+        piece.addEventListener('dragstart', drag);
+        piece.addEventListener('click', () => {
+          if (!piece.draggable) return;
+          if (tappedPiece) tappedPiece.style.outline = '';
+          tappedPiece = piece;
+          piece.style.outline = '3px solid #2196f3';
+        });
+
+        pieceContainer.appendChild(piece);
+      });
+
+      popup.style.display = 'none';
+    }
+
+    function createPiece(imagePath, index) {
+      const piece = document.createElement('div');
+      piece.classList.add('piece');
+      piece.style.backgroundImage = `url('${imagePath}')`;
+      piece.style.backgroundPosition = `-${(index % cols) * pieceWidth}px -${Math.floor(index / cols) * pieceHeight}px`;
+      piece.dataset.index = index;
+      return piece;
+    }
+
+    function drag(e) {
+      dragged = e.target;
+    }
+
+    function drop(e) {
+      e.preventDefault();
+      if (!e.target.classList.contains('dropzone')) return;
+      if (e.target.hasChildNodes()) return;
+
+      const correctIndex = dragged.dataset.index;
+      const dropIndex = e.target.dataset.index;
+
+      if (correctIndex !== dropIndex) return;
+
+      e.target.appendChild(dragged);
+      dragged.draggable = false;
+      dragged.style.cursor = 'default';
+      dragged.style.boxShadow = '0 0 10px 3px #4caf50';
+
+      if (!completedPuzzles[currentImage]) completedPuzzles[currentImage] = Array(totalPieces).fill(false);
+      completedPuzzles[currentImage][correctIndex] = true;
+      correct++;
+
+      if (allPuzzlesCompleted()) setTimeout(() => popup.style.display = 'flex', 300);
+    }
+
+    function allPuzzlesCompleted() {
+      return imageList.every(img => completedPuzzles[img]?.every(x => x));
+    }
+
+    function resetGame() {
+      completedPuzzles = {};
+      popup.style.display = 'none';
+      bgm.pause();
+      bgm.currentTime = 0;
+      location.reload();
+    }
+  </script>
 </body>
 </html>
