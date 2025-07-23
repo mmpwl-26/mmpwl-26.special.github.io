@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>เกมเขาวงกต - ธีมชมพูหวาน</title>
 <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet" />
 <style>
@@ -60,12 +60,15 @@
     flex-direction: column;
     align-items: center;
     padding: 20px 0;
+    width: 100vw;
+    max-width: 600px;
+    box-sizing: border-box;
   }
 
   #maze {
     display: grid;
-    grid-template-columns: repeat(15, 36px);
-    grid-template-rows: repeat(15, 36px);
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
     gap: 4px;
     touch-action: none;
     background: #fce4ec;
@@ -73,11 +76,14 @@
     border-radius: 12px;
     box-shadow: 0 0 15px #f48fb1 inset;
     margin-top: 12px;
+    width: 100%;
+    max-width: 540px;
+    aspect-ratio: 1 / 1;
   }
 
   .cell {
-    width: 36px;
-    height: 36px;
+    width: 100%;
+    height: 100%;
     background: #f8bbd0;
     border-radius: 6px;
     position: relative;
@@ -106,10 +112,10 @@
   .goal::after {
     content: "";
     position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 24px;
-    height: 24px;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 70%;
     background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Pink_heart.svg/1024px-Pink_heart.svg.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -125,10 +131,10 @@
 
   img.item {
     position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 24px;
-    height: 24px;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 70%;
     pointer-events: none;
     user-select: none;
     filter: drop-shadow(0 0 4px #f06292);
@@ -147,31 +153,32 @@
     min-width: 280px;
     text-align: center;
     color: #880e4f;
+    max-width: 600px;
+    width: 90vw;
+    box-sizing: border-box;
   }
 
   /* มือถือ */
   @media (max-width: 600px) {
     #maze {
-      grid-template-columns: repeat(15, 24px);
-      grid-template-rows: repeat(15, 24px);
-      gap: 3px;
+      gap: 2px;
       padding: 8px;
+      max-width: 100vw;
     }
     .cell {
-      width: 24px;
-      height: 24px;
       border-radius: 4px;
     }
     .goal::after, img.item {
-      width: 16px;
-      height: 16px;
-      top: 4px;
-      left: 4px;
+      width: 80%;
+      height: 80%;
+      top: 10%;
+      left: 10%;
     }
     #infoBar {
       font-size: 16px;
       padding: 8px 16px;
-      min-width: 220px;
+      min-width: unset;
+      width: 90vw;
     }
     #startBtn {
       padding: 14px 30px;
@@ -195,9 +202,7 @@
 <audio id="bgMusic" src="https://media.vocaroo.com/mp3/1bilI3G0nRMg" preload="auto" loop></audio>
 
 <script>
-  // --- โค้ดเกมเหมือนเดิม ---
   const levels = [
-    // ... (เหมือนเดิม) ...
     [
       [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
       [1,0,0,0,1,2,0,0,0,0,0,2,0,0,1],
@@ -215,9 +220,41 @@
       [1,0,0,2,0,0,0,0,0,2,0,0,9,0,1],
       [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     ],
-    // ด่านอื่น ๆ ...
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,0,0,1,0,0,2,0,0,0,2,0,0,1],
+      [1,0,1,0,1,0,1,1,1,1,1,1,0,0,1],
+      [1,0,1,0,0,0,0,1,2,0,0,1,0,0,1],
+      [1,0,1,1,1,1,0,1,1,1,0,1,1,0,1],
+      [1,0,0,0,2,1,0,0,0,1,0,0,0,0,1],
+      [1,1,1,1,0,1,1,1,0,1,1,1,1,0,1],
+      [1,0,0,1,0,0,2,1,0,0,0,0,1,0,1],
+      [1,0,2,1,1,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,2,0,0,1,0,1],
+      [1,1,1,1,1,1,1,1,0,1,1,1,1,0,1],
+      [1,0,0,0,0,0,0,1,0,0,0,0,2,0,1],
+      [1,0,1,1,1,1,0,1,1,1,1,1,1,0,1],
+      [1,0,0,2,0,0,0,0,0,2,0,0,0,9,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,2,0,0,1,0,2,0,0,2,0,0,0,1],
+      [1,0,1,1,0,1,0,1,1,1,1,1,1,0,1],
+      [1,0,0,1,0,0,0,0,0,2,0,0,1,0,1],
+      [1,1,0,1,1,1,1,1,0,1,1,0,1,0,1],
+      [1,0,0,0,0,0,2,1,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,0,1,1,1,1,1,1,0,1],
+      [1,0,0,2,0,0,0,0,0,2,0,0,0,0,1],
+      [1,1,0,1,1,1,1,1,0,1,1,1,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,2,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1,1,0,1],
+      [1,2,0,0,0,0,0,0,0,2,0,0,0,9,1],
+      [1,0,1,1,1,1,0,1,1,1,1,1,1,0,1],
+      [1,0,0,2,0,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
   ];
-
   const maze = document.getElementById("maze");
   const infoBar = document.getElementById("infoBar");
   const startBtn = document.getElementById("startBtn");
