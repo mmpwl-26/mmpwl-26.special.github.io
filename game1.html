@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>เกมที่ 1</title>
+  <title>เกมที่ 1: จับคู่ภาพ</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
   <style>
     * {
@@ -30,27 +30,109 @@
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     }
 
-    iframe {
-      width: 100%;
-      max-width: 1000px;
-      height: calc(100vh - 230px);
-      border: 3px solid #b39ddb;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    .game-container {
+      width: 95vw;
+      height: auto;
+      max-width: 400px;
+      background: #fff0f7;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(255, 20, 147, 0.3);
+      padding: 10px;
+      display: none;
+      flex-direction: column;
     }
 
-    .back-link {
-      display: inline-block;
-      margin-top: 30px;
-      padding: 12px 28px;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .card {
+      width: 100%;
+      padding-top: 100%;
+      position: relative;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .card img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card.flipped img,
+    .card.matched img {
+      opacity: 1;
+    }
+
+    .card::before {
+      content: "?";
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      color: deeppink;
+      transition: opacity 0.3s ease;
+    }
+
+    .card.flipped::before,
+    .card.matched::before {
+      opacity: 0;
+    }
+
+    .card.matched {
+      pointer-events: none;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      font-size: 1.2rem;
+      color: deeppink;
+      text-align: center;
+      max-width: 90vw;
+    }
+
+    .start-btn, .back-link {
+      margin-top: 20px;
+      padding: 10px 24px;
       background: linear-gradient(135deg, #cdb4db, #a2d2ff);
-      border-radius: 30px;
-      text-decoration: none;
       color: white;
-      font-size: 16px;
       font-weight: bold;
+      border-radius: 25px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
       box-shadow: 0 6px 16px rgba(100, 100, 255, 0.3);
       transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .start-btn:hover, .back-link:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #b5aad7, #94d4ff);
     }
 
     .back-link::before {
@@ -58,9 +140,12 @@
       margin-right: 6px;
     }
 
-    .back-link:hover {
-      background: linear-gradient(135deg, #b5aad7, #94d4ff);
-      transform: translateY(-2px);
+    #startScreen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 50vh;
+      width: 100%;
     }
 
     @media (max-width: 768px) {
@@ -68,13 +153,9 @@
         font-size: 1.5rem;
       }
 
-      iframe {
-        height: 65vh;
-      }
-
-      .back-link {
-        padding: 10px 24px;
+      .start-btn, .back-link {
         font-size: 15px;
+        padding: 10px 20px;
       }
     }
 
@@ -83,20 +164,117 @@
         padding: 20px 12px;
       }
 
-      iframe {
-        height: 60vh;
-      }
-
-      .back-link {
-        padding: 10px 20px;
+      .start-btn, .back-link {
         font-size: 14px;
+        padding: 8px 16px;
       }
     }
   </style>
 </head>
 <body>
+  <!-- เพลงพื้นหลัง -->
+  <audio id="bgMusic" loop>
+    <source src="https://media.vocaroo.com/mp3/1jjmChdVNrWH" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
   <h2>เกมที่ 1: จับคู่ภาพ</h2>
-  <iframe src="matching game.html" allowfullscreen></iframe>
+
+  <div id="startScreen">
+    <button id="startButton" class="start-btn" onclick="startGame()">เริ่มเกม</button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="grid" id="gameGrid"></div>
+  </div>
+
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      เกมส์นี้ก็ชนะอีกแล้ว ชนะทุกอย่างเลย เก่งมาก 💖<br>
+      <button class="start-btn" onclick="startGame()">เล่นใหม่</button>
+    </div>
+  </div>
+
   <a href="game-menu.html" class="back-link">ย้อนกลับ</a>
+
+  <script>
+    const images = [
+      "game1.jpg", "game2.jpg", "game3.jpg", "game4.jpg", "game5.jpg",
+      "game6.jpg", "game7.jpg", "game8.jpg"
+    ];
+
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let matchedCount = 0;
+
+    function startGame() {
+      document.getElementById("bgMusic").play();
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("gameContainer").style.display = "flex";
+
+      const gameGrid = document.getElementById("gameGrid");
+      gameGrid.innerHTML = "";
+      matchedCount = 0;
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+
+      let cards = [...images, ...images].sort(() => 0.5 - Math.random());
+
+      cards.forEach(src => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.image = src;
+
+        const img = document.createElement("img");
+        img.src = src;
+
+        card.appendChild(img);
+        gameGrid.appendChild(card);
+
+        card.addEventListener("click", () => {
+          if (lockBoard || card.classList.contains("flipped") || card.classList.contains("matched")) return;
+
+          card.classList.add("flipped");
+
+          if (!firstCard) {
+            firstCard = card;
+          } else {
+            secondCard = card;
+            lockBoard = true;
+
+            if (firstCard.dataset.image === secondCard.dataset.image) {
+              firstCard.classList.add("matched");
+              secondCard.classList.add("matched");
+              matchedCount++;
+
+              if (matchedCount === images.length) {
+                setTimeout(() => document.getElementById("popup").style.display = "flex", 500);
+              }
+
+              resetBoard();
+            } else {
+              setTimeout(() => {
+                firstCard.classList.remove("flipped");
+                secondCard.classList.remove("flipped");
+                resetBoard();
+              }, 800);
+            }
+          }
+        });
+      });
+    }
+
+    function resetBoard() {
+      [firstCard, secondCard] = [null, null];
+      lockBoard = false;
+    }
+
+    window.onload = () => {
+      document.getElementById("gameContainer").style.display = "none";
+    };
+  </script>
 </body>
 </html>
