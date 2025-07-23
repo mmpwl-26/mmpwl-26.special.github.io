@@ -6,7 +6,6 @@
   <title>เกมที่ 3: Flappy Bird</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt&family=Itim&display=swap" rel="stylesheet" />
   <style>
-    /* โทนสีพื้นหลังแบบไล่โทนชมพูเหมือนเดิม */
     body {
       margin: 0;
       padding: 0;
@@ -20,6 +19,7 @@
       color: #333;
       text-align: center;
       overflow: hidden;
+      position: relative;
     }
 
     h2 {
@@ -29,7 +29,6 @@
       text-shadow: 1px 1px 2px #fff;
     }
 
-    /* เกมแคนวาส */
     #gameCanvas {
       background: url('4ebe244be4a293f5fb3d07eaae80b437.jpg') no-repeat center center;
       background-size: cover;
@@ -42,9 +41,9 @@
       max-height: 600px;
       display: none;
       animation: popIn 0.6s ease;
+      touch-action: none; /* ป้องกัน scroll ขณะทัชเล่น */
     }
 
-    /* ปุ่มเริ่ม */
     #startButton {
       font-family: 'Itim', cursive;
       font-size: 26px;
@@ -58,13 +57,13 @@
       transition: transform 0.2s, background-color 0.3s;
       margin-bottom: 15px;
       z-index: 200;
+      user-select: none;
     }
     #startButton:hover {
       background-color: #ff5eb8;
       transform: scale(1.05);
     }
 
-    /* คะแนน */
     #score {
       position: absolute;
       top: 30px;
@@ -77,9 +76,9 @@
       z-index: 10;
       display: none;
       font-family: 'Itim', cursive;
+      user-select: none;
     }
 
-    /* Popup เมื่อเกมจบ */
     #popupOverlay {
       display: none;
       position: fixed;
@@ -102,6 +101,7 @@
       box-shadow: 0 0 25px #ffc3e6;
       max-width: 300px;
       animation: popIn 0.4s ease;
+      user-select: none;
     }
 
     #popupBox button {
@@ -114,6 +114,7 @@
       border-radius: 12px;
       cursor: pointer;
       transition: transform 0.2s, background 0.3s;
+      user-select: none;
     }
 
     #popupBox button:hover {
@@ -121,13 +122,11 @@
       transform: scale(1.05);
     }
 
-    /* Animation */
     @keyframes popIn {
       from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
-    /* ปุ่มย้อนกลับ */
     .back-link {
       display: inline-block;
       margin-top: 25px;
@@ -140,6 +139,7 @@
       font-size: 16px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
+      user-select: none;
     }
 
     .back-link::before {
@@ -152,7 +152,6 @@
       transform: scale(1.05);
     }
 
-    /* Responsive */
     @media (max-width: 600px) {
       h2 {
         font-size: 1.5rem;
@@ -179,7 +178,6 @@
   <canvas id="gameCanvas" width="400" height="600"></canvas>
   <button id="startButton">เริ่มเกม</button>
 
-  <!-- Popup เมื่อชน -->
   <div id="popupOverlay">
     <div id="popupBox">
       💖 ที่รักเล่นเก่งมากกกเลย ภูมิจายยย 💖<br />
@@ -189,7 +187,6 @@
 
   <a href="game-menu.html" class="back-link">ย้อนกลับ</a>
 
-  <!-- เพลงแบ็คกราวด์ -->
   <audio id="bgMusic" src="https://media.vocaroo.com/mp3/1mDg7B7XQf5Y" preload="auto"></audio>
 
   <script>
@@ -206,12 +203,11 @@
     const basePipeSpeed = 1.5;
     const pipeWidth = 60;
 
-    // โหลดภาพพื้นหลังและนก
     const bgInside = new Image();
-    bgInside.src = 'bg.png'; // ถ้าจะใช้ภาพจริงต้องมีไฟล์นี้ด้วย หรือเปลี่ยนเป็นภาพพื้นหลังเหมาะสม
+    bgInside.src = 'bg.png'; // ถ้าไม่มีไฟล์นี้ ให้เปลี่ยนหรือใช้สีพื้นหลังแทน
 
     const birdImg = new Image();
-    birdImg.src = 'S__10248196.png'; // ใส่ไฟล์ภาพนกที่ต้องการ
+    birdImg.src = 'S__10248196.png'; // ใส่ภาพนกของคุณ
 
     let bird = {
       x: 80,
@@ -242,7 +238,6 @@
       if (birdImg.complete) {
         ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
       } else {
-        // ถ้าภาพยังโหลดไม่เสร็จ วาดวงกลมแทน
         ctx.fillStyle = 'yellow';
         ctx.beginPath();
         ctx.arc(bird.x + bird.width/2, bird.y + bird.height/2, bird.width/2, 0, Math.PI * 2);
@@ -259,11 +254,10 @@
     }
 
     function draw() {
-      // ถ้าภาพพื้นหลังโหลดเสร็จ
       if (bgInside.complete) {
         ctx.drawImage(bgInside, 0, 0, canvas.width, canvas.height);
       } else {
-        ctx.fillStyle = '#a0d8f7'; // สีฟ้าอ่อนแทนพื้นหลัง
+        ctx.fillStyle = '#a0d8f7';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
       drawPipes();
@@ -296,6 +290,7 @@
       });
 
       if (bird.y + bird.height > canvas.height || bird.y < 0) endGame();
+
       frameCount++;
     }
 
@@ -336,10 +331,19 @@
       started = true;
 
       bgMusic.volume = 0.6;
-      bgMusic.play();
+      bgMusic.play().catch(() => {
+        // ถ้าเล่นเสียงไม่ได้ ให้ผู้เล่นลองกดใหม่
+      });
 
       loop();
     });
+
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (!gameOver && started) {
+        bird.velocity = jumpForce;
+      }
+    }, { passive: false });
 
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space' && !gameOver && started) {
@@ -347,12 +351,6 @@
       }
     });
 
-    window.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      if (!gameOver && started) {
-        bird.velocity = jumpForce;
-      }
-    }, { passive: false });
   </script>
 </body>
 </html>
