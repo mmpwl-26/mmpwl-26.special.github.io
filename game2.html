@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>เกมที่ 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(135deg, #FFF9BD, #DEE791);
+      margin: 0;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #077A7D;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    iframe {
+      width: 100%;
+      max-width: 1000px;
+      height: calc(100vh - 230px);
+      border: 3px solid #077A7D;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 28px;
+      background-color: #077A7D;
+      border-radius: 30px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .back-link::before {
+      content: "← ";
+      margin-right: 4px;
+    }
+
+    .back-link:hover {
+      background-color: #7AE2CF;
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      iframe {
+        height: 60vh;
+      }
+
+      .back-link {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>เกมที่ 2: Jigsaw Puzzle</h2>
+  <iframe src="jigsawpuzle.html" allowfullscreen></iframe>
+  <a href="game-menu.html" class="back-link">ย้อนกลับ</a>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Menu - Web For You</title>
+  <style>
+    body, html {
+      margin: 0; padding: 0;
+      width: 100vw; height: 100vh;
+      font-family: Arial, sans-serif;
+      background: pink;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    #page3 {
+      width: 90vw;
+      max-width: 600px;
+      text-align: center;
+      color: deeppink;
+      user-select: none;
+    }
+    #page3 h1 {
+      font-size: 3rem;
+      margin-bottom: 30px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+.menu-box {
+  background: white;
+  border-radius: 25px;
+  padding: 30px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  text-decoration: none; /* ✅ เอาเส้นใต้ลิงก์ออก */
+  color: inherit;        /* ✅ คงสีข้อความตามเดิม */
+}
+
+    .menu-box:hover {
+      background-color: deeppink;
+      color: white;
+      transform: translateY(-5px);
+    }
+
+    .menu-icon {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 15px;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .menu-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .timer {
+      margin-top: 30px;
+      font-size: 1.3rem;
+      color: white;
+      user-select: none;
+      min-height: 2em;
+    }
+  </style>
+</head>
+<body>
+  <div id="page3">
+    <h1>𝘖𝘶𝘳 𝘔𝘦𝘯𝘶 ♡ ˖ ࣪ !</h1>
+    <div class="menu-grid">
+      <a href="gallery.html" class="menu-box">
+        <img class="menu-icon" src="gallery.png" alt="Gallery Icon" />
+        <div class="menu-text">𐔌   .  ⋮ 𝖦𝖺𝗅𝗅𝖾𝗋𝗒 .ᐟ  ₊ ꒱</div>
+      </a>
+      <a href="timer.html" class="menu-box">
+        <img class="menu-icon" src="time.png" alt="Love Timer Icon" />
+        <div class="menu-text">𐔌   .  ⋮ 𝖫𝗈𝗏𝖾 𝖳𝗂𝗆𝖾𝗋 .ᐟ  ₊ ꒱</div>
+      </a>
+      <a href="game-menu.html" class="menu-box">
+        <img class="menu-icon" src="game.png" alt="Game Icon" />
+        <div class="menu-text">𐔌   .  ⋮ 𝖦𝖺𝗆𝖾 𝖿𝗈𝗋 𝖴 .ᐟ  ₊ ꒱</div>
+      </a>
+      <a href="playlish.html" class="menu-box">
+        <img class="menu-icon" src="music.png" alt="Playlist Icon" />
+        <div class="menu-text">𐔌   .  ⋮ 𝖯𝗅𝖺𝗒𝗅𝗂𝗌𝗍 .ᐟ  ₊ ꒱</div>
+      </a>
+    </div>
+    <div class="timer" id="loveTimer"></div>
+  </div>
+
+  <script>
+    function startCountdown() {
+      const startDate = new Date("2025-04-11T00:00:00");
+      const loveTimer = document.getElementById("loveTimer");
+
+      if (window.loveInterval) clearInterval(window.loveInterval);
+
+      window.loveInterval = setInterval(() => {
+        const now = new Date();
+        const diff = now - startDate;
+        if(diff < 0) {
+          loveTimer.textContent = "ยังไม่ถึงวันนับถอยหลัง";
+          return;
+        }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        loveTimer.textContent = `เราคบกันมาแล้ว ${days} วัน ${hours} ชม. ${minutes} นาที ${seconds} วินาที`;
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

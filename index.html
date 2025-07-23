@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web For You</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+    .page {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      background: pink;
+      position: relative;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+    }
+    .active {
+      display: flex;
+    }
+    .heart-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .heart {
+      width: 20px;
+      height: 20px;
+      background: url("/mnt/data/a99ac900-9032-44f7-9e15-ef31702e5d60.png") no-repeat center;
+      background-size: contain;
+      position: absolute;
+      animation: fall 10s linear infinite;
+    }
+    .heart-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+    .heart-wrapper img {
+      width: 550px;
+      animation: float 3s ease-in-out infinite;
+    }
+    .content-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: hotpink;
+    }
+    .content-overlay h1 {
+      font-size: 2em;
+      margin: 10px 0;
+    }
+    .content-overlay p {
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+    @keyframes fall {
+      0% { top: -10%; opacity: 1; }
+      100% { top: 110%; opacity: 0; }
+    }
+    .start-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background-color: white;
+      color: hotpink;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+  <div class="heart-bg" id="heartContainer"></div>
+  <div class="heart-wrapper">
+    <img src="a38d0444288d9a1643d9bb7376b79974.png" alt="Heart">
+    <div class="content-overlay">
+      <h1>ʚïɞ ☁️𝖲𝗉𝖾𝖼𝗂𝖺𝗅 𝗀𝗂𝖿𝗍 𝖿𝗈𝗋 𝗒𝗈𝗎 🦋 -'๑'-</h1>
+      <p>𝙡𝙚𝙩'𝙨 𝙜𝙤</p>
+      <button class="start-btn" onclick="goToNextPage()">Start!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function goToNextPage() {
+    window.location.href = "page2.html"; // เปลี่ยนเป็นหน้าเมนูของคุณ
+  }
+
+  const heartContainer = document.getElementById("heartContainer");
+  for (let i = 0; i < 50; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.style.left = Math.random() * 100 + "%";
+    heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+    heartContainer.appendChild(heart);
+  }
+</script>
+
+</body>
+</html>

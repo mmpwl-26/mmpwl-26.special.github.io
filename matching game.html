@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>เกมจับคู่ภาพ</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffe4ec;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px 10px;
+      box-sizing: border-box;
+    }
+    h1 {
+      color: deeppink;
+      margin-bottom: 10px;
+    }
+    /* กำหนดขนาดพอดี iframe 700x600 */
+    .game-container {
+      width: 700px;
+      max-width: 95vw;
+      height: 600px;
+      background: #fff0f7;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(255, 20, 147, 0.3);
+      padding: 15px;
+      box-sizing: border-box;
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      flex-grow: 1;
+      overflow: auto; /* ถ้าเกินจะเลื่อนในกริดนี้ */
+      padding-right: 5px;
+    }
+    .card {
+      width: 100%;
+      padding-top: 100%; /* ทำให้กล่องเป็นสี่เหลี่ยมจตุรัส */
+      position: relative;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      overflow: hidden;
+      user-select: none;
+    }
+    .card img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .card.flipped img,
+    .card.matched img {
+      opacity: 1;
+    }
+    .card::before {
+      content: "?";
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      color: deeppink;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+    .card.flipped::before,
+    .card.matched::before {
+      opacity: 0;
+    }
+    .card.matched {
+      pointer-events: none;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      font-size: 1.5rem;
+      color: deeppink;
+      text-align: center;
+      max-width: 90vw;
+      box-sizing: border-box;
+    }
+    .start-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background-color: deeppink;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #startScreen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- เพลง -->
+  <audio id="bgMusic" loop>
+    <source src="https://media.vocaroo.com/mp3/1jjmChdVNrWH" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <h1></h1>
+
+  <div id="startScreen">
+    <button id="startButton" class="start-btn" onclick="startGame()">เริ่มเกม</button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="grid" id="gameGrid"></div>
+  </div>
+
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      เก่งที่สุดในโลกเลยแฟนหนู 💖<br>
+      <button class="start-btn" onclick="startGame()">เล่นใหม่</button>
+    </div>
+  </div>
+
+  <script>
+    const images = [
+      "game1.jpg", "game2.jpg", "game3.jpg", "game4.jpg", "game5.jpg",
+      "game6.jpg", "game7.jpg", "game8.jpg", "game9.jpg", "game10.jpg"
+    ];
+
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let matchedCount = 0;
+
+    function startGame() {
+      document.getElementById("bgMusic").play();
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("gameContainer").style.display = "flex";
+
+      const gameGrid = document.getElementById("gameGrid");
+      gameGrid.innerHTML = "";
+      matchedCount = 0;
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+
+      let cards = [...images, ...images].sort(() => 0.5 - Math.random());
+
+      cards.forEach(src => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.image = src;
+
+        const img = document.createElement("img");
+        img.src = src;
+
+        card.appendChild(img);
+        gameGrid.appendChild(card);
+
+        card.addEventListener("click", () => {
+          if (lockBoard || card.classList.contains("flipped") || card.classList.contains("matched")) return;
+
+          card.classList.add("flipped");
+
+          if (!firstCard) {
+            firstCard = card;
+          } else {
+            secondCard = card;
+            lockBoard = true;
+
+            if (firstCard.dataset.image === secondCard.dataset.image) {
+              firstCard.classList.add("matched");
+              secondCard.classList.add("matched");
+              matchedCount++;
+
+              if (matchedCount === images.length) {
+                setTimeout(() => document.getElementById("popup").style.display = "flex", 500);
+              }
+
+              resetBoard();
+            } else {
+              setTimeout(() => {
+                firstCard.classList.remove("flipped");
+                secondCard.classList.remove("flipped");
+                resetBoard();
+              }, 800);
+            }
+          }
+        });
+      });
+    }
+
+    function resetBoard() {
+      [firstCard, secondCard] = [null, null];
+      lockBoard = false;
+    }
+
+    window.onload = () => {
+      document.getElementById("gameContainer").style.display = "none";
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Playlist Toggle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+body {
+  margin: 0;
+  font-family: 'Prompt', sans-serif;
+  background-color: #121212;
+  color: #fff;
+  padding: 30px;
+}
+
+h1 {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 40px;
+  font-size: 2.2em;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+}
+
+.playlist {
+  max-width: 700px;
+  margin: auto;
+}
+
+.song {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  background-color: #1e1e1e;
+  border-radius: 15px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.song:hover {
+  background-color: #262626;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.song.playing {
+  background-color: #1db95430;
+  box-shadow: 0 0 15px #1db95480;
+}
+
+.cover {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-right: 16px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+}
+
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  flex-grow: 1;
+}
+
+.title {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.artist {
+  font-size: 0.9em;
+  color: #b3b3b3;
+}
+
+.playing-indicator {
+  position: absolute;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: #1db954;
+  border-radius: 50%;
+  display: none;
+  box-shadow: 0 0 10px #1db954;
+}
+
+.song.playing .playing-indicator {
+  display: block;
+}
+
+audio {
+  display: none;
+}
+
+.back-button {
+  display: inline-block;
+  margin-bottom: 25px;
+  padding: 10px 20px;
+  background-color: #1e1e1e;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.back-button:hover {
+  background-color: #1db954;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+  </style>
+</head>
+<body>
+
+  <a href="page3.html" class="back-button">← ย้อนกลับ</a>
+
+  <h1>🌱 ៸៸𓂃 𝖯𝗅𝖺𝗒𝗅𝗂𝗌𝗍 💭 彡·˚</h1>
+  
+  <div class="playlist">
+    <div class="song" onclick="togglePlay(this)">
+      <div class="cover">
+        <img src="cover1.jpg" alt="Cover 1">
+      </div>
+      <div class="info">
+        <div class="title">กอด</div>
+        <div class="artist">QLER</div>
+      </div>
+      <div class="playing-indicator"></div>
+      <audio src="QLER - กอด.mp3"></audio>
+    </div>
+
+    <div class="song" onclick="togglePlay(this)">
+      <div class="cover">
+        <img src="cover2.jpg" alt="Cover 2">
+      </div>
+      <div class="info">
+        <div class="title">โลกที่ไม่มีเธอ</div>
+        <div class="artist">PORTRAIT</div>
+      </div>
+      <div class="playing-indicator"></div>
+      <audio src="โลกที่ไม่มีเธอ - PORTRAIT.mp3"></audio>
+    </div>
+
+    <div class="song" onclick="togglePlay(this)">
+      <div class="cover">
+        <img src="cover3.jpg" alt="Cover 3">
+      </div>
+      <div class="info">
+        <div class="title">การเดินทางที่สวยงาม</div>
+        <div class="artist">Billkin</div>
+      </div>
+      <div class="playing-indicator"></div>
+      <audio src="การเดินทางที่สวยงาม - Billkin.mp3"></audio>
+    </div>
+
+    <div class="song" onclick="togglePlay(this)">
+      <div class="cover">
+        <img src="cover7.jpg" alt="Cover 4">
+      </div>
+      <div class="info">
+        <div class="title">โคตรคิดถึง</div>
+        <div class="artist">Porch Pathaseth</div>
+      </div>
+      <div class="playing-indicator"></div>
+      <audio src="Porch Pathaseth - โคตรคิดถึง.mp3"></audio>
+    </div>
+
+    <div class="song" onclick="togglePlay(this)">
+      <div class="cover">
+        <img src="cover4.jpg" alt="Cover 5">
+      </div>
+      <div class="info">
+        <div class="title">ไม่อยากให้เธอไม่สบาย (You) </div>
+        <div class="artist">Three Man Down</div>
+      </div>
+      <div class="playing-indicator"></div>
+      <audio src="ไม่อยากให้เธอไม่สบาย (You) ThreeManDown.mp3"></audio>
+    </div>
+
+    <div class="song" onclick="togglePlay(this)">
+      <div class="cover">
+        <img src="cover6.jpg" alt="Cover 6">
+      </div>
+      <div class="info">
+        <div class="title">ดาวนำทาง (Quiet Night)</div>
+        <div class="artist">loserpop</div>
+      </div>
+      <div class="playing-indicator"></div>
+      <audio src="loserpop - ดาวนำทาง (Quiet Night).mp3"></audio>
+    </div>
+
+    <div class="song" onclick="togglePlay(this)">
+      <div class="cover">
+        <img src="cover5.jpg" alt="Cover 7">
+      </div>
+      <div class="info">
+        <div class="title">จะบอกเธอว่ารัก</div>
+        <div class="artist">The Parkinson</div>
+      </div>
+      <div class="playing-indicator"></div>
+      <audio src="The Parkinson - จะบอกเธอว่ารัก.mp3"></audio>
+    </div>
+
+    <div class="song" onclick="togglePlay(this)">
+      <div class="cover">
+        <img src="cover8.jpg" alt="Cover 8">
+      </div>
+      <div class="info">
+        <div class="title">รักแฟน</div>
+        <div class="artist">BENT</div>
+      </div>
+      <div class="playing-indicator"></div>
+      <audio src="BENT - รักแฟน.mp3"></audio>
+    </div>
+    </div>
+
+  <script>
+    let currentAudio = null;
+    let currentSong = null;
+
+    function togglePlay(songElement) {
+      const audio = songElement.querySelector("audio");
+
+      // ถ้าเพลงเดียวกันถูกกดอีกครั้ง → toggle pause/play
+      if (currentAudio === audio) {
+        if (audio.paused) {
+          audio.play();
+          songElement.classList.add("playing");
+        } else {
+          audio.pause();
+          songElement.classList.remove("playing");
+        }
+        return;
+      }
+
+      // ถ้ามีเพลงก่อนหน้า → หยุดก่อน
+      if (currentAudio) {
+        currentAudio.pause();
+        if (currentSong) currentSong.classList.remove("playing");
+      }
+
+      // เล่นเพลงใหม่
+      audio.play();
+      songElement.classList.add("playing");
+
+      // บันทึกสถานะ
+      currentAudio = audio;
+      currentSong = songElement;
+
+      // เมื่อเพลงจบ → เอา class playing ออก
+      audio.onended = () => {
+        songElement.classList.remove("playing");
+        currentAudio = null;
+        currentSong = null;
+      };
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <title>Memory Gallery</title>
+  <style>
+body {
+  margin: 0;
+  font-family: 'Prompt', sans-serif;
+  background: url('66e8b832611ea1a3958ca227927be29b.jpg') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.carousel {
+  position: relative;
+  width: 340px;
+  height: 520px;
+  perspective: 1200px;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-drag: none;
+  overflow: visible;
+  cursor: grab;
+  margin-bottom: 15px;
+  transition: cursor 0.3s ease;
+}
+.carousel:active {
+  cursor: grabbing;
+}
+
+.carousel-inner {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  left: 0;
+  top: 0;
+}
+
+.carousel-item {
+  position: absolute;
+  width: 300px;
+  height: 420px;
+  left: 20px;
+  top: 0;
+  border-radius: 20px;
+  background-color: #fff;
+  border: 5px solid #ff66aa;
+  box-shadow: 0 15px 30px rgba(255, 102, 170, 0.3);
+  transform-origin: center center;
+  opacity: 0.5;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.carousel-item img,
+.carousel-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+  user-select: none;
+}
+
+.caption {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 12px 20px;
+  border: 2px solid #ff66aa;
+  border-radius: 16px;
+  box-shadow: 0 6px 14px rgba(255, 102, 170, 0.3);
+  color: #ff3399;
+  font-size: 1.2em;
+  font-weight: 600;
+  text-align: center;
+  max-width: 320px;
+  margin: 0 auto 20px;
+  user-select: none;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+  gap: 12px;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  background: #F1D3CE;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.dot:hover {
+  background: #ff66aa;
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: #ff3399;
+  box-shadow: 0 0 8px #ff3399;
+}
+
+.back-button {
+  margin-top: 10px;
+  background: linear-gradient(135deg, #ffd6e8, #ffeaf4);
+  color: #ff3399;
+  border: none;
+  padding: 14px 36px;
+  font-size: 1.1em;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(255, 51, 153, 0.25);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.back-button::before {
+  content: "← ";
+  font-size: 1.2em;
+  margin-right: 6px;
+}
+
+.back-button:hover {
+  background: #ffb6d9;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(255, 51, 153, 0.35);
+}
+  </style>
+</head>
+<body>
+
+<div class="carousel" id="carousel">
+  <div class="carousel-inner" id="carousel-inner"></div>
+</div>
+<div class="caption" id="caption">คำบรรยาย</div>
+<div class="dots" id="dots"></div>
+<button class="back-button" onclick="window.location.href='page3.html'">ย้อนกลับ</button>
+
+<script>
+  const media = [
+    { type: 'image', src: "IMG_25680308201305607.png", caption: "รูปแรกแบบแรกเลยที่ถ่ายด้วยกัน 555 ถ่ายติดคนน่ารัก @เลิร์นเทคบริษัทบ้า" },
+    { type: 'image', src: "IMG_4144.jpg", caption: "รูปคู่รูปแรกในเครื่องพี่ไมค์ @RiverCity " },
+    { type: 'video', src: "IMG_0075.MOV", caption: "ของชิ้นพิเศษที่แลกกันให้ @สายลมบางปูววววว" },
+    { type: 'image', src: "game2.jpg", caption: "งานบวชไอ้คนน่ารัก @อรัญครั้งแรกของมุก" },
+    { type: 'image', src: "18-05-68_250723_1.jpg", caption: "ไปหาทหารใหม่ครั้งแรก @ร.19พัน1 ไกลโคตรรรรร" },
+    { type: 'video', src: "774903596.668520.mp4", caption: "ฉลองวันครบรอบด้วยกันครั้งแรก @อรัญนั่นเองง" },
+    { type: 'image', src: "S__9338882.jpg", caption: "นั่งมองตากันที่อรัญ @อรัญครั้งที่สองของมุก" },
+    { type: 'image', src: "S__10190852_0.jpg", caption: "คูมุมองครั้งแรกโคตรตลก @ท้องฟ้าจำลองเอกมัย" },
+    { type: 'video', src: "0722.mp4", caption: "เกาะล้านหวานม้ากกก คนโสดก็สู้ๆนะคนมีแฟนจะสวีท @หาดตายาย เกาะล้าน" },
+    { type: 'image', src: "250723.jpg", caption: "ใบลาแรกของคุณทหาร หนูภูมิใจในตัวพี่ม้ากก @ร.19พัน1 ครั้งที่สอง" },
+    { type: 'image', src: "S__9297923.jpg", caption: "ดำน้ำครั้งแรกของเรา ทำไมน้ำเข้าหน้ากากได้555 @เกาะล้าน" },
+    { type: 'image', src: "18-07-68_250718_3.jpg", caption: "ส่งทหารกลับกองร้อยครั้งแรกอยากร้องไห้มากก แต่ชีวิตสู้กลับ555 @หมอชิต2" }
+
+  ];
+
+  const carousel = document.getElementById('carousel');
+  const carouselInner = document.getElementById('carousel-inner');
+  const caption = document.getElementById('caption');
+  const dots = document.getElementById('dots');
+
+  let currentIndex = 0;
+  let startX = 0;
+  let endX = 0;
+  let isDragging = false;
+
+  media.forEach((item, index) => {
+    const div = document.createElement('div');
+    div.className = 'carousel-item';
+
+    if (item.type === 'image') {
+      const img = document.createElement('img');
+      img.src = item.src;
+      img.alt = item.caption;
+      div.appendChild(img);
+    } else if (item.type === 'video') {
+      const video = document.createElement('video');
+      video.src = item.src;
+      video.controls = true;
+      video.playsInline = true;
+      video.setAttribute('preload', 'metadata');
+      div.appendChild(video);
+    }
+
+    carouselInner.appendChild(div);
+
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    if (index === 0) dot.classList.add('active');
+    dot.onclick = () => setSlide(index);
+    dots.appendChild(dot);
+  });
+
+  function setSlide(index) {
+    const items = document.querySelectorAll('.carousel-item');
+    const dotItems = document.querySelectorAll('.dot');
+
+    items.forEach((item, i) => {
+      const offset = i - index;
+
+      item.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+      item.style.opacity = offset === 0 ? '1' : '0.5';
+      item.style.zIndex = 10 - Math.abs(offset);
+
+      if (offset === 0) {
+        item.style.transform = 'translateX(0px) scale(1)';
+      } else {
+        const shiftX = offset * 60;
+        const scale = 1 - Math.min(Math.abs(offset) * 0.1, 0.3);
+        item.style.transform = `translateX(${shiftX}px) scale(${scale})`;
+      }
+
+      const video = item.querySelector('video');
+      if (video) video.pause();
+
+      dotItems[i].classList.remove('active');
+    });
+
+    dotItems[index].classList.add('active');
+    caption.textContent = media[index].caption;
+    currentIndex = index;
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + media.length) % media.length;
+    setSlide(currentIndex);
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % media.length;
+    setSlide(currentIndex);
+  }
+
+  // Touch
+  carousel.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+  });
+
+  carousel.addEventListener('touchend', (e) => {
+    endX = e.changedTouches[0].clientX;
+    handleGesture();
+  });
+
+  // Mouse
+  carousel.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+  });
+
+  carousel.addEventListener('mouseup', (e) => {
+    if (!isDragging) return;
+    endX = e.clientX;
+    isDragging = false;
+    handleGesture();
+  });
+
+  function handleGesture() {
+    if (endX - startX > 50) {
+      prevSlide();
+    } else if (startX - endX > 50) {
+      nextSlide();
+    }
+  }
+
+  setSlide(currentIndex);
+</script>
+
+</body>
+</html>

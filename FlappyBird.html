@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Flappy Bird น่ารัก</title>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: url('4ebe244be4a293f5fb3d07eaae80b437.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Itim', cursive;
+      overflow: hidden;
+    }
+
+    canvas {
+      background: transparent;
+      border: 3px solid #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+      width: 90vw;
+      height: calc(90vw * 1.5);
+      max-width: 400px;
+      max-height: 600px;
+      display: none;
+      animation: popIn 0.6s ease;
+    }
+
+    #startButton {
+      position: absolute;
+      z-index: 200;
+      font-size: 26px;
+      padding: 16px 36px;
+      border: none;
+      border-radius: 50px;
+      background-color: #ff8acb;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(255, 138, 203, 0.5);
+      transition: transform 0.2s, background-color 0.3s;
+      font-family: 'Itim', cursive;
+    }
+
+    #startButton:hover {
+      background-color: #ff5eb8;
+      transform: scale(1.05);
+    }
+
+    #popupOverlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #popupBox {
+      background: #ffe6f3;
+      border: 2px solid #ff69b4;
+      padding: 35px 45px;
+      border-radius: 25px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #d63384;
+      box-shadow: 0 0 25px #ffc3e6;
+      max-width: 300px;
+      animation: popIn 0.4s ease;
+    }
+
+    #popupBox button {
+      margin-top: 22px;
+      padding: 12px 28px;
+      font-size: 18px;
+      background: #f55a94;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    #popupBox button:hover {
+      background: #ff3e86;
+      transform: scale(1.05);
+    }
+
+    #score {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 28px;
+      color: white;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px #000;
+      z-index: 10;
+      display: none;
+      font-family: 'Itim', cursive;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="score">คะแนน: 0</div>
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+  <button id="startButton">เริ่มเกม</button>
+
+  <!-- เพลงแบ็คกราวด์ -->
+  <audio id="bgMusic" src="https://media.vocaroo.com/mp3/1mDg7B7XQf5Y" preload="auto"></audio>
+
+  <!-- Popup เมื่อชน -->
+  <div id="popupOverlay">
+    <div id="popupBox">
+      💖 ที่รักเล่นเก่งมากกกเลย ภูมิจายยย 💖<br />
+      <button onclick="resetGame()">เริ่มเล่นใหม่</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const startButton = document.getElementById('startButton');
+    const scoreDisplay = document.getElementById('score');
+    const popupOverlay = document.getElementById('popupOverlay');
+    const bgMusic = document.getElementById('bgMusic');
+
+    const gravity = 0.4;
+    const jumpForce = -8;
+    const pipeGap = 180;
+    const basePipeSpeed = 1.5;
+    const pipeWidth = 60;
+
+    const bgInside = new Image();
+    bgInside.src = 'bg.png';
+
+    const birdImg = new Image();
+    birdImg.src = 'S__10248196.png';
+
+    let bird = {
+      x: 80,
+      y: 150,
+      width: 60,
+      height: 60,
+      velocity: 0,
+    };
+
+    let pipes = [];
+    let frameCount = 0;
+    let score = 0;
+    let gameOver = false;
+    let started = false;
+
+    function createPipe() {
+      const top = Math.random() * (canvas.height - pipeGap - 120) + 40;
+      pipes.push({
+        x: canvas.width,
+        top: top,
+        bottom: top + pipeGap,
+        width: pipeWidth,
+        passed: false
+      });
+    }
+
+    function drawBird() {
+      ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+    }
+
+    function drawPipes() {
+      ctx.fillStyle = '#228B22';
+      pipes.forEach(pipe => {
+        ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+        ctx.fillRect(pipe.x, pipe.bottom, pipe.width, canvas.height - pipe.bottom);
+      });
+    }
+
+    function draw() {
+      ctx.drawImage(bgInside, 0, 0, canvas.width, canvas.height);
+      drawBird();
+      drawPipes();
+    }
+
+    function update() {
+      if (gameOver || !started) return;
+
+      bird.velocity += gravity;
+      bird.y += bird.velocity;
+
+      if (frameCount % 150 === 0) createPipe();
+
+      const currentPipeSpeed = basePipeSpeed + (score > 6 ? 0.5 : 0);
+
+      pipes.forEach(pipe => pipe.x -= currentPipeSpeed);
+      pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
+
+      pipes.forEach(pipe => {
+        const hitTop = bird.x + bird.width > pipe.x && bird.x < pipe.x + pipe.width && bird.y < pipe.top;
+        const hitBottom = bird.x + bird.width > pipe.x && bird.x < pipe.x + pipe.width && bird.y + bird.height > pipe.bottom;
+        if (hitTop || hitBottom) endGame();
+
+        if (!pipe.passed && pipe.x + pipe.width < bird.x) {
+          pipe.passed = true;
+          score++;
+          scoreDisplay.textContent = `คะแนน: ${score}`;
+        }
+      });
+
+      if (bird.y + bird.height > canvas.height || bird.y < 0) endGame();
+      frameCount++;
+    }
+
+    function endGame() {
+      gameOver = true;
+      popupOverlay.style.display = 'flex';
+    }
+
+function resetGame() {
+  bird.y = 150;
+  bird.velocity = 0;
+  pipes = [];
+  frameCount = 0;
+  score = 0;
+  gameOver = false;
+  popupOverlay.style.display = 'none';
+  scoreDisplay.textContent = 'คะแนน: 0';
+  loop(); // เริ่มเกมใหม่ โดยไม่แตะ bgMusic
+}
+
+    function loop() {
+      if (!gameOver && started) {
+        update();
+        draw();
+        requestAnimationFrame(loop);
+      }
+    }
+
+    startButton.addEventListener('click', () => {
+  startButton.style.display = 'none';
+  canvas.style.display = 'block';
+  scoreDisplay.style.display = 'block';
+  started = true;
+
+  // ✅ เล่นเพลงแค่ครั้งเดียว
+  bgMusic.volume = 0.6;
+  bgMusic.play();
+
+  loop();
+});
+
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && !gameOver) bird.velocity = jumpForce;
+    });
+
+    window.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (!gameOver) bird.velocity = jumpForce;
+    }, { passive: false });
+
+    bgInside.onload = () => {
+      ctx.drawImage(bgInside, 0, 0, canvas.width, canvas.height);
+    };
+  </script>
+</body>
+</html>

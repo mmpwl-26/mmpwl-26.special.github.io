@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Password Page Cute</title>
+  <style>
+    body, html {
+      margin: 0; padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: url('d3fc365d823195fe96d5bd35df367748.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .password-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background: rgba(255 255 255 / 0.9);
+      padding: 30px 40px 40px 40px;
+      border-radius: 30px;
+      box-shadow: 0 8px 20px rgba(255, 105, 180, 0.5);
+      width: fit-content;
+    }
+
+    /* กล่องข้อความ Enter our Password */
+    .password-title {
+      background: #ffb6c1;
+      padding: 15px 50px;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(255, 105, 180, 0.7);
+      color: white;
+      font-size: 23px;
+      font-weight: bold;
+      text-shadow: 2px 2px 5px #ff69b4;
+      user-select: none;
+      transition: transform 0.3s ease;
+    }
+    .password-title:hover {
+      transform: scale(1.05);
+      cursor: default;
+    }
+
+    .password-container {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+    }
+
+    .password-photo {
+      border: 5px dotted #ff69b4;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 10px #ff69b4;
+    }
+
+    .password-photo img {
+      width: 260px;
+      display: block;
+    }
+
+    .password-inputs {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+.display {
+  font-size: 28px;
+  letter-spacing: 10px;   /* เพิ่มช่องว่างระหว่างตัวเลข */
+  font-weight: bold;
+  color: hotpink;
+  text-shadow: 1px 1px 3px #ff69b4;
+  border: 3px solid #ff69b4;
+  border-radius: 15px;
+  padding: 5px 20px;     /* เพิ่ม padding ด้านข้างให้กว้างขึ้น */
+  min-width: 250px;       /* เพิ่มความกว้างขั้นต่ำ */
+  text-align: center;
+  background: #fff0f6;
+  user-select: none;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);  /* ปรับขนาดปุ่มให้ใหญ่ขึ้น */
+  gap: 15px;                              /* เพิ่มช่องว่างระหว่างปุ่ม */
+}
+
+.keypad button {
+  padding: 20px;
+  border-radius: 30px;
+  font-size: 15px;
+  border: none;
+  background: #ff69b4;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 5px 10px #ff1493;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+    .keypad button:hover {
+      background: #ff85c1;
+      transform: scale(1.1);
+    }
+    .keypad button:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="password-wrapper">
+    <div class="password-title">Enter our Password</div>
+    <div class="password-container">
+      <div class="password-photo">
+        <img src="game10.jpg" alt="Photo" />
+      </div>
+      <div class="password-inputs">
+        <div class="display" id="passwordDisplay">******</div>
+        <div class="keypad">
+          <button onclick="enterDigit('1')">1</button>
+          <button onclick="enterDigit('2')">2</button>
+          <button onclick="enterDigit('3')">3</button>
+          <button onclick="enterDigit('4')">4</button>
+          <button onclick="enterDigit('5')">5</button>
+          <button onclick="enterDigit('6')">6</button>
+          <button onclick="enterDigit('7')">7</button>
+          <button onclick="enterDigit('8')">8</button>
+          <button onclick="enterDigit('9')">9</button>
+          <button onclick="enterDigit('*')">*</button>
+          <button onclick="enterDigit('0')">0</button>
+          <button onclick="deleteDigit()">Del</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const correctPassword = "110468";
+  let inputPassword = "";
+
+  function enterDigit(digit) {
+    if (inputPassword.length >= 6) return;
+    inputPassword += digit;
+    updateDisplay();
+    if (inputPassword.length === 6) {
+      setTimeout(checkPassword, 300);
+    }
+  }
+
+  function updateDisplay() {
+    document.getElementById("passwordDisplay").textContent = inputPassword.padEnd(6, "*");
+  }
+
+  function deleteDigit() {
+    inputPassword = inputPassword.slice(0, -1);
+    updateDisplay();
+  }
+
+  function checkPassword() {
+    if (inputPassword === correctPassword) {
+      window.location.href = "page3.html"; // เปลี่ยนลิงก์ตามต้องการ
+    } else {
+      alert("Wrong password, please try again.");
+      inputPassword = "";
+      updateDisplay();
+    }
+  }
+</script>
+
+</body>
+</html>
