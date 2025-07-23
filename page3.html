@@ -14,16 +14,21 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      box-sizing: border-box;
     }
+
     #page3 {
       width: 90vw;
       max-width: 600px;
       text-align: center;
       color: deeppink;
       user-select: none;
+      padding: 20px;
+      box-sizing: border-box;
     }
+
     #page3 h1 {
-      font-size: 3rem;
+      font-size: 2.5rem;
       margin-bottom: 30px;
     }
 
@@ -33,19 +38,19 @@
       gap: 20px;
     }
 
-.menu-box {
-  background: white;
-  border-radius: 25px;
-  padding: 30px 20px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-  text-decoration: none; /* ✅ เอาเส้นใต้ลิงก์ออก */
-  color: inherit;        /* ✅ คงสีข้อความตามเดิม */
-}
+    .menu-box {
+      background: white;
+      border-radius: 25px;
+      padding: 25px 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
 
     .menu-box:hover {
       background-color: deeppink;
@@ -54,25 +59,53 @@
     }
 
     .menu-icon {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 15px;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 10px;
       object-fit: contain;
       user-select: none;
       pointer-events: none;
     }
 
     .menu-text {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       font-weight: bold;
     }
 
     .timer {
       margin-top: 30px;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: white;
       user-select: none;
       min-height: 2em;
+    }
+
+    /* 📱 Responsive for smaller screens */
+    @media (max-width: 480px) {
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-icon {
+        width: 90px;
+        height: 90px;
+      }
+
+      .menu-text {
+        font-size: 1rem;
+      }
+
+      #page3 h1 {
+        font-size: 2rem;
+      }
+
+      .menu-box {
+        padding: 20px 10px;
+      }
+
+      .timer {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -81,20 +114,20 @@
     <h1>𝘖𝘶𝘳 𝘔𝘦𝘯𝘶 ♡ ˖ ࣪ !</h1>
     <div class="menu-grid">
       <a href="gallery.html" class="menu-box">
-        <img class="menu-icon" src="Gallery.png" alt="Gallery Icon" />
-        <div class="menu-text">𐔌   .  ⋮ 𝖦𝖺𝗅𝗅𝖾𝗋𝗒 .ᐟ  ₊ ꒱</div>
+        <img class="menu-icon" src="gallery.png" alt="Gallery Icon" />
+        <div class="menu-text">𐔌 . ⋮ 𝖦𝖺𝗅𝗅𝖾𝗋𝗒 .ᐟ ₊ ꒱</div>
       </a>
       <a href="timer.html" class="menu-box">
         <img class="menu-icon" src="time.png" alt="Love Timer Icon" />
-        <div class="menu-text">𐔌   .  ⋮ 𝖫𝗈𝗏𝖾 𝖳𝗂𝗆𝖾𝗋 .ᐟ  ₊ ꒱</div>
+        <div class="menu-text">𐔌 . ⋮ 𝖫𝗈𝗏𝖾 𝖳𝗂𝗆𝖾𝗋 .ᐟ ₊ ꒱</div>
       </a>
       <a href="game-menu.html" class="menu-box">
         <img class="menu-icon" src="game.png" alt="Game Icon" />
-        <div class="menu-text">𐔌   .  ⋮ 𝖦𝖺𝗆𝖾 𝖿𝗈𝗋 𝖴 .ᐟ  ₊ ꒱</div>
+        <div class="menu-text">𐔌 . ⋮ 𝖦𝖺𝗆𝖾 𝖿𝗈𝗋 𝖴 .ᐟ ₊ ꒱</div>
       </a>
       <a href="playlish.html" class="menu-box">
         <img class="menu-icon" src="music.png" alt="Playlist Icon" />
-        <div class="menu-text">𐔌   .  ⋮ 𝖯𝗅𝖺𝗒𝗅𝗂𝗌𝗍 .ᐟ  ₊ ꒱</div>
+        <div class="menu-text">𐔌 . ⋮ 𝖯𝗅𝖺𝗒𝗅𝗂𝗌𝗍 .ᐟ ₊ ꒱</div>
       </a>
     </div>
     <div class="timer" id="loveTimer"></div>
@@ -110,7 +143,7 @@
       window.loveInterval = setInterval(() => {
         const now = new Date();
         const diff = now - startDate;
-        if(diff < 0) {
+        if (diff < 0) {
           loveTimer.textContent = "ยังไม่ถึงวันนับถอยหลัง";
           return;
         }
@@ -122,6 +155,8 @@
         loveTimer.textContent = `เราคบกันมาแล้ว ${days} วัน ${hours} ชม. ${minutes} นาที ${seconds} วินาที`;
       }, 1000);
     }
+
+    startCountdown(); // ⏱ เรียกเริ่มนับเมื่อเปิดหน้า
   </script>
 </body>
 </html>
