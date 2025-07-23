@@ -21,14 +21,15 @@
       flex-direction: column;
       align-items: center;
       gap: 20px;
-      background: rgba(255 255 255 / 0.9);
-      padding: 30px 40px 40px 40px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px 40px;
       border-radius: 30px;
       box-shadow: 0 8px 20px rgba(255, 105, 180, 0.5);
-      width: fit-content;
+      width: 90%;
+      max-width: 800px;
+      box-sizing: border-box;
     }
 
-    /* กล่องข้อความ Enter our Password */
     .password-title {
       background: #ffb6c1;
       padding: 15px 50px;
@@ -49,7 +50,9 @@
     .password-container {
       display: flex;
       align-items: center;
-      gap: 50px;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
     }
 
     .password-photo {
@@ -60,7 +63,8 @@
     }
 
     .password-photo img {
-      width: 260px;
+      width: 240px;
+      max-width: 100%;
       display: block;
     }
 
@@ -71,40 +75,40 @@
       gap: 20px;
     }
 
-.display {
-  font-size: 28px;
-  letter-spacing: 10px;   /* เพิ่มช่องว่างระหว่างตัวเลข */
-  font-weight: bold;
-  color: hotpink;
-  text-shadow: 1px 1px 3px #ff69b4;
-  border: 3px solid #ff69b4;
-  border-radius: 15px;
-  padding: 5px 20px;     /* เพิ่ม padding ด้านข้างให้กว้างขึ้น */
-  min-width: 250px;       /* เพิ่มความกว้างขั้นต่ำ */
-  text-align: center;
-  background: #fff0f6;
-  user-select: none;
-}
+    .display {
+      font-size: 26px;
+      letter-spacing: 10px;
+      font-weight: bold;
+      color: hotpink;
+      text-shadow: 1px 1px 3px #ff69b4;
+      border: 3px solid #ff69b4;
+      border-radius: 15px;
+      padding: 5px 20px;
+      min-width: 200px;
+      text-align: center;
+      background: #fff0f6;
+      user-select: none;
+    }
 
-.keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 80px);  /* ปรับขนาดปุ่มให้ใหญ่ขึ้น */
-  gap: 15px;                              /* เพิ่มช่องว่างระหว่างปุ่ม */
-}
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      gap: 10px;
+    }
 
-.keypad button {
-  padding: 20px;
-  border-radius: 30px;
-  font-size: 15px;
-  border: none;
-  background: #ff69b4;
-  color: white;
-  font-weight: bold;
-  box-shadow: 0 5px 10px #ff1493;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.15s ease;
-  user-select: none;
-}
+    .keypad button {
+      padding: 16px;
+      border-radius: 30px;
+      font-size: 15px;
+      border: none;
+      background: #ff69b4;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 5px 10px #ff1493;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.15s ease;
+      user-select: none;
+    }
 
     .keypad button:hover {
       background: #ff85c1;
@@ -112,6 +116,44 @@
     }
     .keypad button:active {
       transform: scale(0.95);
+    }
+
+    /* 📱 Responsive for Mobile */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+        height: auto;
+      }
+
+      .password-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .password-photo img {
+        width: 180px;
+      }
+
+      .display {
+        font-size: 20px;
+        letter-spacing: 8px;
+        min-width: 180px;
+      }
+
+      .keypad {
+        grid-template-columns: repeat(3, 60px);
+        gap: 10px;
+      }
+
+      .keypad button {
+        padding: 14px;
+        font-size: 14px;
+      }
+
+      .password-title {
+        font-size: 20px;
+        padding: 10px 30px;
+      }
     }
   </style>
 </head>
@@ -167,7 +209,7 @@
 
   function checkPassword() {
     if (inputPassword === correctPassword) {
-      window.location.href = "page3.html"; // เปลี่ยนลิงก์ตามต้องการ
+      window.location.href = "page3.html";
     } else {
       alert("Wrong password, please try again.");
       inputPassword = "";
