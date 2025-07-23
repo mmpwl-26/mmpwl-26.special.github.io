@@ -3,35 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>เกมจิ๊กซอว์ - เล่นได้จริง ลากวาง</title>
+  <title>เกมจิ๊กซอว์ - จิ้มวาง</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Prompt', sans-serif;
-      background: linear-gradient(135deg, #FFF9BD, #DEE791);
-      margin: 0; padding: 20px;
-      display: flex; flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      color: #333;
-      text-align: center;
+    * {
+      box-sizing: border-box;
     }
-    h2 {
-      font-size: 2rem; margin-bottom: 20px;
-      color: #077A7D;
-      text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    body {
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+      background: #fce4ec;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
     }
     #startScreen {
-      position: fixed; top: 0; left: 0;
+      position: fixed;
+      top: 0; left: 0;
       width: 100%; height: 100%;
       background: #f8bbd0;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10;
-      flex-direction: column;
-      gap: 20px;
     }
     #startBtn {
       font-size: 24px;
@@ -41,52 +39,51 @@
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      user-select: none;
-      box-shadow: 0 4px 12px rgba(236, 64, 122, 0.6);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
       transition: background-color 0.3s ease;
     }
-    #startBtn:hover { background: #d6336c; }
+    #startBtn:hover {
+      background: #d81b60;
+    }
     #gameWrapper {
       display: none;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
-      background: #fce4ec;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      max-width: 380px;
+      padding: 10px 0 40px;
       width: 100%;
+      max-width: 380px;
     }
     #thumbnails {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 15px;
-      gap: 10px;
-      flex-wrap: wrap;
+      margin-bottom: 10px;
     }
     .thumbnail {
       width: 60px;
-      height: 60px;
-      object-fit: cover;
+      margin: 0 5px;
       cursor: pointer;
       border: 3px solid transparent;
       border-radius: 8px;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s;
+      opacity: 1;
+      pointer-events: auto;
     }
     .thumbnail.selected {
       border-color: #ec407a;
+    }
+    .thumbnail.locked {
+      opacity: 0.4;
+      pointer-events: none;
     }
     #gameContainer {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
     }
     #pieceContainer, #puzzleBoard {
       display: grid;
       grid-template-columns: repeat(4, 80px);
       grid-template-rows: repeat(4, 80px);
       gap: 5px;
+      margin: 10px 0;
     }
     .piece, .dropzone {
       width: 80px;
@@ -98,7 +95,16 @@
       background-size: 320px 320px;
       border: 2px solid #fff;
       cursor: pointer;
-      transition: outline 0.2s;
+      transition: outline 0.2s, box-shadow 0.3s;
+    }
+    .piece.selected {
+      outline: 3px solid #2196f3;
+      box-shadow: 0 0 10px 3px #2196f3;
+    }
+    .piece.locked {
+      cursor: default;
+      box-shadow: 0 0 10px 3px #4caf50 !important;
+      border-color: #4caf50 !important;
     }
     .dropzone {
       background: #fce4ec;
@@ -106,11 +112,21 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .dropzone.correct {
+      background-color: #c8e6c9;
+      border-color: #4caf50;
+    }
+    .dropzone.incorrect {
+      background-color: #ffcdd2;
+      border-color: #f44336;
     }
     #popup {
       position: fixed;
       top: 0; left: 0;
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       background: rgba(255,255,255,0.9);
       display: none;
       align-items: center;
@@ -119,7 +135,6 @@
       flex-direction: column;
       z-index: 99;
       text-align: center;
-      user-select: none;
       padding: 20px;
     }
     #popup button {
@@ -131,30 +146,32 @@
       background: #ec407a;
       color: white;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(236, 64, 122, 0.6);
-      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: background-color 0.3s;
     }
     #popup button:hover {
-      background: #d6336c;
+      background: #d81b60;
     }
-    @media (max-width: 440px) {
-      #gameWrapper {
-        max-width: 100%;
-        padding: 10px;
-      }
-      #pieceContainer, #puzzleBoard {
-        grid-template-columns: repeat(4, 60px);
-        grid-template-rows: repeat(4, 60px);
-      }
-      .piece, .dropzone {
-        width: 60px;
-        height: 60px;
-      }
+    .back-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 24px;
+      background-color: #ec407a;
+      color: white;
+      font-weight: bold;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: background-color 0.3s, transform 0.3s;
+      user-select: none;
+    }
+    .back-link:hover {
+      background-color: #d81b60;
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
-  <h2>เกมที่ 2: Jigsaw Puzzle</h2>
 
   <div id="startScreen">
     <button id="startBtn">เริ่มเกม</button>
@@ -162,15 +179,17 @@
 
   <div id="gameWrapper">
     <div id="thumbnails">
-      <img src="jigsaw1.jpg" class="thumbnail" onclick="startGame(this, 'jigsaw1.jpg')" />
-      <img src="jigsaw2.jpg" class="thumbnail" onclick="startGame(this, 'jigsaw2.jpg')" />
-      <img src="jigsaw3.jpg" class="thumbnail" onclick="startGame(this, 'jigsaw3.jpg')" />
+      <img src="jigsaw1.jpg" class="thumbnail" alt="รูปภาพ 1" onclick="startGame(this, 'jigsaw1.jpg')" />
+      <img src="jigsaw2.jpg" class="thumbnail" alt="รูปภาพ 2" onclick="startGame(this, 'jigsaw2.jpg')" />
+      <img src="jigsaw3.jpg" class="thumbnail" alt="รูปภาพ 3" onclick="startGame(this, 'jigsaw3.jpg')" />
     </div>
 
     <div id="gameContainer">
       <div id="pieceContainer"></div>
       <div id="puzzleBoard"></div>
     </div>
+
+    <a href="game-menu.html" class="back-link">ย้อนกลับ</a>
   </div>
 
   <div id="popup">
@@ -194,13 +213,15 @@
     const puzzleBoard = document.getElementById('puzzleBoard');
     const pieceContainer = document.getElementById('pieceContainer');
     const popup = document.getElementById('popup');
+    const thumbnails = document.querySelectorAll('.thumbnail');
 
-    let dragged = null;
-    let tappedPiece = null;
-    let correct = 0;
-    let completedPuzzles = {};
+    let selectedPiece = null;
+    let correctCount = 0;
+    let completedPositions = new Array(totalPieces).fill(false);
     let currentImage = null;
-    const imageList = ['jigsaw1.jpg', 'jigsaw2.jpg', 'jigsaw3.jpg'];
+
+    // เก็บสถานะภาพที่ผ่านแล้ว
+    let completedImages = new Set();
 
     startBtn.addEventListener('click', () => {
       startScreen.style.display = 'none';
@@ -210,73 +231,45 @@
     });
 
     function startGame(el, imagePath) {
-      document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('selected'));
-      el.classList.add('selected');
+      if (completedImages.has(imagePath)) {
+        alert("คุณเล่นภาพนี้ครบแล้ว กรุณาเลือกภาพอื่น");
+        return;
+      }
       currentImage = imagePath;
-      puzzleBoard.innerHTML = '';
-      pieceContainer.innerHTML = '';
-      correct = 0;
-      tappedPiece = null;
+      correctCount = 0;
+      completedPositions.fill(false);
+      selectedPiece = null;
 
+      thumbnails.forEach(img => {
+        img.classList.remove('selected');
+        if (completedImages.has(img.getAttribute('src'))) {
+          img.classList.add('locked');
+        } else {
+          img.classList.remove('locked');
+        }
+      });
+      el.classList.add('selected');
+
+      pieceContainer.innerHTML = '';
+      puzzleBoard.innerHTML = '';
+
+      // สร้าง dropzones
       for (let i = 0; i < totalPieces; i++) {
         const dropzone = document.createElement('div');
         dropzone.classList.add('dropzone');
         dropzone.dataset.index = i;
-
-        dropzone.addEventListener('dragover', e => e.preventDefault());
-        dropzone.addEventListener('drop', drop);
-        dropzone.addEventListener('click', () => {
-          if (!tappedPiece || dropzone.hasChildNodes()) return;
-          const correctIndex = tappedPiece.dataset.index;
-          const dropIndex = dropzone.dataset.index;
-          if (correctIndex !== dropIndex) return;
-          dropzone.appendChild(tappedPiece);
-          tappedPiece.style.outline = '';
-          tappedPiece.draggable = false;
-          tappedPiece.style.cursor = 'default';
-          tappedPiece.style.boxShadow = '0 0 10px 3px #4caf50';
-          if (!completedPuzzles[currentImage]) completedPuzzles[currentImage] = Array(totalPieces).fill(false);
-          completedPuzzles[currentImage][correctIndex] = true;
-          tappedPiece = null;
-          correct++;
-          if (allPuzzlesCompleted()) setTimeout(() => popup.style.display = 'flex', 300);
-        });
-
+        dropzone.addEventListener('click', () => onDropzoneClick(dropzone));
         puzzleBoard.appendChild(dropzone);
       }
 
-      let completed = completedPuzzles[imagePath] || Array(totalPieces).fill(false);
-      correct = completed.filter(x => x).length;
+      // สร้างชิ้นส่วนและสุ่มตำแหน่งใน pieceContainer
+      const positions = [...Array(totalPieces).keys()];
+      shuffleArray(positions);
 
-      completed.forEach((done, index) => {
-        if (done) {
-          const piece = createPiece(imagePath, index);
-          piece.draggable = false;
-          piece.style.cursor = 'default';
-          piece.style.boxShadow = '0 0 10px 3px #4caf50';
-          puzzleBoard.children[index].appendChild(piece);
-        }
-      });
-
-      const remaining = [];
-      for (let i = 0; i < totalPieces; i++) {
-        if (!completed[i]) remaining.push(i);
-      }
-      remaining.sort(() => Math.random() - 0.5);
-
-      remaining.forEach(i => {
+      positions.forEach(i => {
         const piece = createPiece(imagePath, i);
-        piece.draggable = true;
         piece.dataset.index = i;
-
-        piece.addEventListener('dragstart', drag);
-        piece.addEventListener('click', () => {
-          if (!piece.draggable) return;
-          if (tappedPiece) tappedPiece.style.outline = '';
-          tappedPiece = piece;
-          piece.style.outline = '3px solid #2196f3';
-        });
-
+        piece.addEventListener('click', () => onPieceClick(piece));
         pieceContainer.appendChild(piece);
       });
 
@@ -288,47 +281,121 @@
       piece.classList.add('piece');
       piece.style.backgroundImage = `url('${imagePath}')`;
       piece.style.backgroundPosition = `-${(index % cols) * pieceWidth}px -${Math.floor(index / cols) * pieceHeight}px`;
-      piece.dataset.index = index;
       return piece;
     }
 
-    function drag(e) {
-      dragged = e.target;
+    function onPieceClick(piece) {
+      if (piece.classList.contains('locked')) return;
+      if (selectedPiece) {
+        selectedPiece.classList.remove('selected');
+      }
+      selectedPiece = piece;
+      selectedPiece.classList.add('selected');
     }
 
-    function drop(e) {
-      e.preventDefault();
-      if (!e.target.classList.contains('dropzone')) return;
-      if (e.target.hasChildNodes()) return;
+    function onDropzoneClick(dropzone) {
+      if (!selectedPiece) return;
 
-      const correctIndex = dragged.dataset.index;
-      const dropIndex = e.target.dataset.index;
+      // ถ้ามีชิ้นอยู่ใน dropzone ให้ย้ายกลับมา pieceContainer
+      if (dropzone.firstChild) {
+        const oldPiece = dropzone.firstChild;
+        oldPiece.classList.remove('selected');
+        if (!oldPiece.classList.contains('locked')) pieceContainer.appendChild(oldPiece);
 
-      if (correctIndex !== dropIndex) return;
+        // อัปเดตสถานะชิ้นที่ถูกย้ายออก
+        const oldIndex = parseInt(oldPiece.dataset.index);
+        completedPositions[oldIndex] = false;
+        correctCount--;
+      }
 
-      e.target.appendChild(dragged);
-      dragged.draggable = false;
-      dragged.style.cursor = 'default';
-      dragged.style.boxShadow = '0 0 10px 3px #4caf50';
+      // วาง selectedPiece ลง dropzone
+      dropzone.appendChild(selectedPiece);
+      selectedPiece.classList.remove('selected');
 
-      if (!completedPuzzles[currentImage]) completedPuzzles[currentImage] = Array(totalPieces).fill(false);
-      completedPuzzles[currentImage][correctIndex] = true;
-      correct++;
+      const pieceIndex = parseInt(selectedPiece.dataset.index);
+      const dropIndex = parseInt(dropzone.dataset.index);
 
-      if (allPuzzlesCompleted()) setTimeout(() => popup.style.display = 'flex', 300);
+      if (pieceIndex === dropIndex) {
+        dropzone.classList.add('correct');
+        dropzone.classList.remove('incorrect');
+        selectedPiece.classList.add('locked');
+        selectedPiece.style.boxShadow = '0 0 10px 3px #4caf50';
+        completedPositions[pieceIndex] = true;
+        correctCount++;
+      } else {
+        dropzone.classList.add('incorrect');
+        dropzone.classList.remove('correct');
+        selectedPiece.style.boxShadow = '0 0 10px 3px #f44336';
+        completedPositions[pieceIndex] = false;
+
+        // ชิ้นผิดไม่ล็อก ให้ย้ายกลับมา pieceContainer ทันที
+        setTimeout(() => {
+          if (dropzone.firstChild === selectedPiece) {
+            dropzone.removeChild(selectedPiece);
+            selectedPiece.style.boxShadow = '';
+            pieceContainer.appendChild(selectedPiece);
+          }
+        }, 500);
+      }
+
+      selectedPiece = null;
+
+      checkImageComplete();
     }
 
-    function allPuzzlesCompleted() {
-      return imageList.every(img => completedPuzzles[img]?.every(x => x));
+    function checkImageComplete() {
+      if (correctCount === totalPieces) {
+        completedImages.add(currentImage);
+
+        // ล็อก thumbnails
+        thumbnails.forEach(img => {
+          if (img.getAttribute('src') === currentImage) {
+            img.classList.add('locked');
+            img.classList.remove('selected');
+          }
+        });
+
+        // เคลียร์ชิ้นส่วนที่เหลือ
+        pieceContainer.innerHTML = '';
+
+        if (completedImages.size === 3) {
+          setTimeout(() => {
+            popup.style.display = 'flex';
+            bgm.pause();
+            bgm.currentTime = 0;
+          }, 400);
+        } else {
+          alert('ภาพนี้ต่อครบแล้ว! เลือกภาพใหม่เล่นต่อได้เลย');
+        }
+      }
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length -1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i +1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
 
     function resetGame() {
-      completedPuzzles = {};
       popup.style.display = 'none';
+      pieceContainer.innerHTML = '';
+      puzzleBoard.innerHTML = '';
+      currentImage = null;
+      correctCount = 0;
+      completedPositions.fill(false);
+      completedImages.clear();
+      selectedPiece = null;
+      thumbnails.forEach(img => {
+        img.classList.remove('locked');
+        img.classList.remove('selected');
+      });
+      startScreen.style.display = 'flex';
+      gameWrapper.style.display = 'none';
       bgm.pause();
       bgm.currentTime = 0;
-      location.reload();
     }
   </script>
+
 </body>
 </html>
